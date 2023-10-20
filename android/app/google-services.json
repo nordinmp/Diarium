@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "745110377327",
+    "project_id": "antimedia-74490",
+    "storage_bucket": "antimedia-74490.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:745110377327:android:1e4f8787e887e83b44ce9a",
+        "android_client_info": {
+          "package_name": "com.nmp.diarium"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "745110377327-6u3655hor0kcvl23hj5pa95aa6bhrlf2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBh857WCE53SEfjRrt6FSdZePbMGODxhyQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "745110377327-6u3655hor0kcvl23hj5pa95aa6bhrlf2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "745110377327-8b29stu3sk4t0oqp9uo64lqakd6g3sv6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.nmp.diarium"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
