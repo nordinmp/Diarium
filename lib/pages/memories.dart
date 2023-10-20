@@ -97,9 +97,10 @@ class _MemorieScreen extends State<MemorieScreen>
                         return StoryAsset(
                           imagePath: StoryImageData['imagePath'],
                           isFavorite: StoryImageData['isFavorite'],
-                          storyDate: dateTaken,
+                          imageDate: dateTaken,
                           storyPath: StoryStoriesData['imagePath'],
                           storyTitle: StoryStoriesData['title'],
+                          imageId: StoryImageData['id'],
                         );
                       },
                     );

@@ -137,7 +137,8 @@ class _CameraScreenState extends State<CameraScreen>
           arguments:
           {
             'Path': _capturedImage!.path,
-            'TimeTaken': dateTaken
+            'TimeTaken': dateTaken,
+            'StoryId': '',
           }
       );
       await _controller.setFlashMode(FlashMode.off);
@@ -173,7 +174,7 @@ class _CameraScreenState extends State<CameraScreen>
           'url': downloadUrl,
           'imagePath': _capturedImage!.path,
           'dateTaken': dateTaken,
-          'description': 'Your description here',
+          'description': '',
           'story': documentsData[0]['id'],
           'isFavorite': false,
           'isShared': false,

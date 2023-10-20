@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'pages/home.dart';
 import 'pages/memories.dart';
@@ -23,7 +25,8 @@ class RouteGenerator {
       case 'image':
         final Path = (args as Map<String, dynamic>)['Path'] ?? false;
         final TimeTaken = (args)['TimeTaken'] ?? false;
-        return MaterialPageRoute(builder: (_) => StoryScreen(Path: Path, TimeTaken: TimeTaken,));
+        final StoryPath = (args)['StoryPath'];
+        return MaterialPageRoute(builder: (_) => StoryScreen(Path: Path, TimeTaken: TimeTaken, StoryPath: StoryPath,));
       default:
         return _errorRoute();
     }

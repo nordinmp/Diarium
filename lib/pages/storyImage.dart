@@ -2,16 +2,25 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 
 class StoryScreen extends StatefulWidget
 {
   final String Path;
   final DateTime TimeTaken;
+  final String StoryPath;
 
   final bool hasDescrip;
 
-  const StoryScreen({super.key, required this.Path, this.hasDescrip = true, required this.TimeTaken});
+  const StoryScreen({
+    super.key, 
+    required this.Path, 
+    this.hasDescrip = true,
+    required this.TimeTaken, 
+    required this.StoryPath
+    });
 
   @override
   _StoryScreenState createState() => _StoryScreenState();
@@ -23,6 +32,7 @@ class _StoryScreenState extends State<StoryScreen> {
   {
     super.initState();
   }
+
 
   String description = "lorem ipsum";
 
@@ -48,7 +58,7 @@ class _StoryScreenState extends State<StoryScreen> {
               ),
             ),
             SizedBox(
-              width: screenWidth - 50,
+              width: screenWidth - 150,
                 child: Image.file(
                   File(widget.Path),
                   fit: BoxFit.cover,
@@ -85,12 +95,15 @@ class _StoryScreenState extends State<StoryScreen> {
                ],
              ),
            ),
-          FloatingActionButton(
-            onPressed: () {},
-            elevation: 0,
-            tooltip: "",
-            child: Image.asset("assets/StoryImages/day63-school-bag.png"),
-            )
+          ClipRRect(
+            borderRadius: BorderRadius.circular(16.0), // border radius for a FAB
+            child: FloatingActionButton(
+              onPressed: () {},
+              elevation: 0,
+              tooltip: "",
+              child: Image.asset("assets/StoryImages/${widget.StoryPath}"),
+            ),
+          )
           ],
         )
       ),

@@ -1,22 +1,30 @@
 part of asset_library;
 
-class StoryAsset extends StatelessWidget {
+class StoryAsset extends StatefulWidget {
   final String imagePath;
   final String storyPath;
-  final bool isFavorite;
+  bool isFavorite;
   final String storyTitle;
-  final DateTime storyDate;
+  final DateTime imageDate;
+  final String imageId;
 
 
-  const StoryAsset({
+  StoryAsset({
     Key? key,
     required this.imagePath,
-    required this.storyDate,
+    required this.imageDate,
     this.isFavorite = false,
     required this.storyPath,
-    required this.storyTitle
+    required this.storyTitle,
+    required this.imageId,
   }) : super(key: key);
 
+  @override
+  State<StoryAsset> createState() => _StoryAssetState();
+}
+
+
+class _StoryAssetState extends State<StoryAsset> {
   @override
   Widget build(BuildContext context) {
 
@@ -24,14 +32,59 @@ class StoryAsset extends StatelessWidget {
     double height = MediaQuery.of(context).size.height * 0.10;
     double width = MediaQuery.of(context).size.width * 0.85;
 
+    const userId = 'DQpwb1plg9NovbFDvwMJtKalWcb2';
+
+
     return GestureDetector(
       onLongPress: () {
         showDialog(context: context, builder: (_) =>
-          const AlertDialog(
-            title: Text("Story Settings"),
-            content: Text("Set as Favorite")
-          ),
+          StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return AlertDialog(
+                title: Text("Story Settings"),
+                content: Text("Change quick settings the Story"),
+                actions: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Set as favorite"),
+                      Switch(
+                        value: widget.isFavorite,
+                        onChanged: (bool value) async {
+                          setState(() {
+                            widget.isFavorite = value;
+                          });
 
+                          // Get a reference to the document
+                          DocumentReference docRef = FirebaseFirestore.instance
+                              .collection('users')
+                              .doc(userId) // replace with actual user ID
+                              .collection('photos')
+                              .doc(widget.imageId);
+
+                          // Update the document
+                          await docRef.update({
+                            'isFavorite': widget.isFavorite,
+                          });
+                        }
+                      ),
+                    ],
+                  )
+                ],
+              );
+            },
+          ),
+        );
+      },
+      onTap: () {
+        Navigator.of(context).pushNamed(
+          'image',
+          arguments:
+          {
+            'Path': widget.imagePath,
+            'TimeTaken': widget.imageDate,
+            'StoryPath': widget.storyPath,
+          }
         );
       },
       child: Card(
@@ -53,7 +106,7 @@ class StoryAsset extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(50.0),
                     child: Image(
-                      image: AssetImage('assets/StoryImages/$storyPath'),
+                      image: AssetImage('assets/StoryImages/${widget.storyPath}'),
                       fit: BoxFit.fitWidth,
                     ),
                   ),
@@ -68,20 +121,20 @@ class StoryAsset extends StatelessWidget {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(storyTitle,
+                          Text(widget.storyTitle,
                               style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold)
                           ),
                           const Gap(10),
-                          isFavorite
+                          widget.isFavorite
                               ? const Icon(Icons.favorite, color: Colors.red,)
                               : Container(),
                         ],
                       ),
                       const Gap(4),
                       Text(
-                          DateFormat("yyyy-MM-dd HH:mm").format(storyDate),
+                          DateFormat("yyyy-MM-dd HH:mm").format(widget.imageDate),
                           style: const TextStyle(
                               fontSize: 16)
                       ),
@@ -100,7 +153,7 @@ class StoryAsset extends StatelessWidget {
                     Container(
                       child:
                       Image.file(
-                        File(imagePath),
+                        File(widget.imagePath),
                         fit: BoxFit.cover,
                       ),
                     ),
