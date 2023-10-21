@@ -131,32 +131,33 @@ class _CameraScreenState extends State<CameraScreen>
         _capturedImage = XFile(newPhotoPath);
       });
 
+      const String? user = "DQpwb1plg9NovbFDvwMJtKalWcb2";
+
+      String collectionName = '/users/$user/stories';
+      List<Map<String, dynamic>> documentsData = await getDocumentsData(collectionName);
+
+      // Now 'documentsData' is a list of maps, where each map is the data of a document
+      print('Heres what i have: ${documentsData}');
+
       Wakelock.disable();
+
       Navigator.of(context).pushNamed(
           'image',
           arguments:
           {
             'Path': _capturedImage!.path,
             'TimeTaken': dateTaken,
-            'StoryId': '',
+            'StoryPath': documentsData[0]['imagePath'],
           }
       );
       await _controller.setFlashMode(FlashMode.off);
       _isFlashOn = false;
-
-      const user = "DQpwb1plg9NovbFDvwMJtKalWcb2";
 
       // If the user is not signed in, sign in the user anonymously
       /*if (user == null) {
         UserCredential userCredential = await FirebaseAuth.instance.signInAnonymously();
         user = userCredential.user;
       } */
-
-      String collectionName = '/users/$user/stories';
-      List<Map<String, dynamic>> documentsData = await getDocumentsData(collectionName);
-
-      // Now 'documentsData' is a list of maps, where each map is the data of a document
-      print(documentsData);
 
       if (user != null)
       {

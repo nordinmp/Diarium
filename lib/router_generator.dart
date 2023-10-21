@@ -18,14 +18,14 @@ class RouteGenerator {
       case 'memories':
         return MaterialPageRoute(builder: (_) => const MemorieScreen());
       case 'profile':
-        return MaterialPageRoute(builder: (_) => const ProfileScreen());
+        return MaterialPageRoute(builder: (_) =>  ProfileScreen());
       case 'camera':
         final isTime = (args as Map<String, dynamic>)['isTime'] ?? false;
         return MaterialPageRoute(builder: (_) => CameraScreen(isTime: isTime));
       case 'image':
-        final Path = (args as Map<String, dynamic>)['Path'] ?? false;
-        final TimeTaken = (args)['TimeTaken'] ?? false;
-        final StoryPath = (args)['StoryPath'];
+        final Path = (args as Map<String, dynamic>)['Path'] ?? '';
+        final TimeTaken = (args)['TimeTaken'] ?? '';
+        final StoryPath = (args)['StoryPath'] ?? '';
         return MaterialPageRoute(builder: (_) => StoryScreen(Path: Path, TimeTaken: TimeTaken, StoryPath: StoryPath,));
       default:
         return _errorRoute();
