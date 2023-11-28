@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:diarium/asset_library.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,42 +12,43 @@ class MemorieScreen extends StatefulWidget
 class _MemorieScreen extends State<MemorieScreen>
 {
 
-  Future<Map<String, List<Map<String, dynamic>>>> _getID(String userId) async {
+  Stream<Map<String, List<Map<String, dynamic>>>> _getPhotosAndStoriesStream(String userId) {
     // Fetch all 'story' from the 'photos' collection where 'isFavorite' is true
-    QuerySnapshot photosSnapshot = await FirebaseFirestore.instance
+    return FirebaseFirestore.instance
         .collection('users')
         .doc(userId)
         .collection('photos')
         .where('isFavorite', isEqualTo: true)
-        .get();
+        .snapshots()
+        .asyncMap((photosSnapshot) async {
+          List<Map<String, dynamic>> storiesData = [];
+          List<Map<String, dynamic>> photosData = [];
 
-    List<Map<String, dynamic>> storiesData = [];
-    List<Map<String, dynamic>> photosData = [];
+          // Use a loop to fetch the corresponding story for each photo in photosSnapshot
+          for (var doc in photosSnapshot.docs) {
+            String storyId = doc['story'];
 
-    // Use a loop to fetch the corresponding story for each photo in photosSnapshot
-    for (var doc in photosSnapshot.docs) {
-      String storyId = doc['story'];
+            // Fetch the corresponding story from the 'stories' collection
+            DocumentSnapshot storyDoc = await FirebaseFirestore.instance
+                .collection('users')
+                .doc(userId)
+                .collection('stories')
+                .doc(storyId)
+                .get();
 
-      // Fetch the corresponding story from the 'stories' collection
-      DocumentSnapshot storyDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .collection('stories')
-          .doc(storyId)
-          .get();
+            // Add the story data to storiesData
+            storiesData.add(storyDoc.data() as Map<String, dynamic>);
+            photosData.add(doc.data() as Map<String, dynamic>);
+          }
 
-      // Add the story data to storiesData
-      storiesData.add(storyDoc.data() as Map<String, dynamic>);
-      photosData.add(doc.data() as Map<String, dynamic>);
-    }
+          print('Stories Data: $storiesData');
+          print('Photos Data: $photosData');
 
-    print('Stories Data: $storiesData');
-    print('Photos Data: $photosData');
-
-    return {
-      'stories': storiesData,
-      'photos': photosData,
-    };
+          return {
+            'stories': storiesData,
+            'photos': photosData,
+          };
+        });
   }
 
   @override
@@ -72,8 +72,8 @@ class _MemorieScreen extends State<MemorieScreen>
             ),
           ),
           Expanded(
-              child: FutureBuilder<Map<String, List<Map<String, dynamic>>>>(
-                future: _getID(userId),
+              child: StreamBuilder<Map<String, List<Map<String, dynamic>>>>(
+                stream: _getPhotosAndStoriesStream(userId),
                 builder: (BuildContext context, AsyncSnapshot<Map<String, List<Map<String, dynamic>>>> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const CircularProgressIndicator();
@@ -86,6 +86,7 @@ class _MemorieScreen extends State<MemorieScreen>
                     print('Stories: $storiesData');
                     print('Photos: $photosData');
 
+                    // TODO sort by date
                     return ListView.separated(
                       itemCount: photosData.length,
                       separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 16),
@@ -109,8 +110,6 @@ class _MemorieScreen extends State<MemorieScreen>
                   }
                 },
               ),
-
-
           ),
         ],
       ),

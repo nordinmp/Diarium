@@ -73,16 +73,14 @@ class _CameraScreenState extends State<CameraScreen>
     return Center(
       child:
         SizedBox(
-          width: screenWidth,
+          width: screenWidth-50,
           //height: screenWidth,
-          child: ClipRect(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(24),
             child: Container(
               width: screenWidth,
-              //height: screenWidth ,
+              //height: screenWidth,
               // TODO giv den rounded cornes
-              decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(24))
-              ),
               child: Stack(
                 children: <Widget>[
                   CameraPreview(_controller),
