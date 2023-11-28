@@ -120,6 +120,7 @@ Widget build(BuildContext context) {
         String description = snapshot.data?[0]['description'] ?? "";
 
         return Scaffold(
+          resizeToAvoidBottomInset: false, 
           key: scaffoldKey,
           appBar: AppBar(),
           body: Center(
