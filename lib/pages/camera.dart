@@ -139,7 +139,7 @@ class _CameraScreenState extends State<CameraScreen>
 
       Wakelock.disable();
 
-      Navigator.of(context).pushNamed(
+      Navigator.of(context).pushReplacementNamed(
           'image',
           arguments:
           {

@@ -69,8 +69,8 @@ class _StoryScreenState extends State<StoryScreen> {
             controller: descriptionController,
             maxLines: null,
             keyboardType: TextInputType.multiline,
-            decoration: const InputDecoration(
-              labelText: 'description',
+            decoration:  InputDecoration(
+              labelText: photosDataNotifier.value[0]['description'],
             ),
           ),
           actions: <Widget>[
@@ -191,13 +191,22 @@ Widget build(BuildContext context) {
                           title: Text('Change description'),
                         ),
                       ),
-                      const PopupMenuItem<int>(
-                        value: 2,
-                        child: ListTile(
-                          leading: Icon(Icons.favorite_border_outlined),
-                          title: Text('Set as favorite'),
+                      if (photosDataNotifier.value[0]['isFavorite'] == false)
+                        const PopupMenuItem<int>(
+                          value: 2,
+                          child: ListTile(
+                            leading: Icon(Icons.favorite_border_outlined),
+                            title: Text('Set as favorite'),
+                          ),
                         )
-                      ),
+                      else
+                        PopupMenuItem<int>(
+                          value: 2,
+                          child: ListTile(
+                            leading: Icon(Icons.favorite_outlined, color: Theme.of(context).colorScheme.primary,),
+                            title: const Text('Remove favorite'),
+                          ),
+                        ),
                       const PopupMenuItem<int>(
                         value: 3,
                         child: ListTile(
