@@ -11,6 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:uuid/uuid.dart';
 
+import '../data/userData.dart';
 
 
 
@@ -131,7 +132,7 @@ class _CameraScreenState extends State<CameraScreen>
 
       const String? user = "DQpwb1plg9NovbFDvwMJtKalWcb2";
 
-      String collectionName = '/users/$user/stories';
+      String collectionName = '/users/${users[0]['userId']}/stories';
       List<Map<String, dynamic>> documentsData = await getDocumentsData(collectionName);
 
       // Now 'documentsData' is a list of maps, where each map is the data of a document
@@ -157,17 +158,22 @@ class _CameraScreenState extends State<CameraScreen>
         user = userCredential.user;
       } */
 
-      if (user != null)
+      if (users[0]['userId'] != null)
       {
+        String downloadUrl = '';
+
+        // If the user has premium permissions upload to the cloud.
+        if (users[0]['hasPremium'] == true) {
         // User is signed in, proceed with uploading files.
-        const uuid = Uuid();
-        final storageRef = FirebaseStorage.instance.ref().child('images').child(user).child('${uuid.v1()}.jpg');
-        final uploadTask = storageRef.putFile(newPhotoFile);
-        final downloadUrl = await uploadTask.then((res) => res.ref.getDownloadURL());
+          const uuid = Uuid();
+          final storageRef = FirebaseStorage.instance.ref().child('images').child(user).child('${uuid.v1()}.jpg');
+          final uploadTask = storageRef.putFile(newPhotoFile);
+          downloadUrl = await uploadTask.then((res) => res.ref.getDownloadURL());
+        }
 
         DocumentReference docRef = await FirebaseFirestore.instance
             .collection('users')
-            .doc(user)
+            .doc(users[0]['userId'])
             .collection('photos')
             .add({
           'url': downloadUrl,

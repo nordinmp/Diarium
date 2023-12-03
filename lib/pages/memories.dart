@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:diarium/asset_library.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../data/userData.dart';
+
+
 class MemorieScreen extends StatefulWidget
 {
   const MemorieScreen({Key? key}) : super(key: key);
@@ -53,7 +56,7 @@ class _MemorieScreen extends State<MemorieScreen>
 
   @override
   Widget build(BuildContext context) {
-    const userId = 'DQpwb1plg9NovbFDvwMJtKalWcb2';
+    //const userId = 'DQpwb1plg9NovbFDvwMJtKalWcb2';
 
     return Scaffold(
       appBar: const HeaderBar(),
@@ -73,7 +76,7 @@ class _MemorieScreen extends State<MemorieScreen>
           ),
           Expanded(
               child: StreamBuilder<Map<String, List<Map<String, dynamic>>>>(
-                stream: _getPhotosAndStoriesStream(userId),
+                stream: _getPhotosAndStoriesStream(users[0]['userId']),
                 builder: (BuildContext context, AsyncSnapshot<Map<String, List<Map<String, dynamic>>>> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const CircularProgressIndicator();

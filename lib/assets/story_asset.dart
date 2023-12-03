@@ -32,7 +32,7 @@ class _StoryAssetState extends State<StoryAsset> {
     double height = MediaQuery.of(context).size.height * 0.10;
     double width = MediaQuery.of(context).size.width * 0.85;
 
-    const userId = 'DQpwb1plg9NovbFDvwMJtKalWcb2';
+    //const userId = 'DQpwb1plg9NovbFDvwMJtKalWcb2';
 
 
     return GestureDetector(
@@ -41,13 +41,13 @@ class _StoryAssetState extends State<StoryAsset> {
           StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               return AlertDialog(
-                title: Text("Story Settings"),
-                content: Text("Change quick settings the Story"),
+                title: const Text("Story Settings"),
+                content: const Text("Change quick settings the Story"),
                 actions: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("Set as favorite"),
+                      const Text("Set as favorite"),
                       Switch(
                         value: widget.isFavorite,
                         onChanged: (bool value) async {
@@ -58,7 +58,7 @@ class _StoryAssetState extends State<StoryAsset> {
                           // Get a reference to the document
                           DocumentReference docRef = FirebaseFirestore.instance
                               .collection('users')
-                              .doc(userId) // replace with actual user ID
+                              .doc(users[0]['userId']) // replace with actual user ID
                               .collection('photos')
                               .doc(widget.imageId);
 

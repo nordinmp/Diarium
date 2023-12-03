@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:diarium/asset_library.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../data/userData.dart';
 
 
 class MyHomePage extends StatefulWidget {
@@ -23,7 +24,7 @@ class _MyHomePageState extends State<MyHomePage> {
       'endDate': DateTime(2023, 8, 15),
       'actionClips': ["New", "Experience"]
     };
-    const userId = 'DQpwb1plg9NovbFDvwMJtKalWcb2';
+    //const userId = 'DQpwb1plg9NovbFDvwMJtKalWcb2';
     return Scaffold(
       appBar: const HeaderBar(),
       body: Column(
@@ -44,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               stream: FirebaseFirestore.instance
                   .collection('users')
-                  .doc(userId)
+                  .doc(users[0]['userId'])
                   .collection('stories')
                   .snapshots(),
               builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {

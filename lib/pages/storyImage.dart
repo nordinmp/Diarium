@@ -1,9 +1,18 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
-  import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rxdart/rxdart.dart';
+
+
+import 'package:diarium/asset_library.dart';
+
+
+import '../data/userData.dart';
 
 
 
@@ -26,9 +35,9 @@ class StoryScreen extends StatefulWidget
 
 class _StoryScreenState extends State<StoryScreen> {
 
-  static String userId = "DQpwb1plg9NovbFDvwMJtKalWcb2";
+  
 
-
+  List<Map<String, dynamic>> storiesData = [];
   List<Map<String, dynamic>> photosData = [];
 
   @override
@@ -40,20 +49,43 @@ class _StoryScreenState extends State<StoryScreen> {
 
 
   final StreamController<List<Map<String, dynamic>>> _photosController = StreamController();
+  final StreamController<List<Map<String, dynamic>>> _storiesController = StreamController();
+
   ValueNotifier<List<Map<String, dynamic>>> photosDataNotifier = ValueNotifier<List<Map<String, dynamic>>>([]);
 
-  Stream<List<Map<String, dynamic>>> _fetchIDFromImagePath(String userId) {
-    FirebaseFirestore.instance
+
+  Stream<Map<String, List<Map<String, dynamic>>>> _fetchIDFromImagePath(String userId) {
+    return FirebaseFirestore.instance
       .collection('users')
       .doc(userId)
       .collection('photos')
       .where('imagePath', isEqualTo: widget.Path)
       .snapshots()
-      .listen((snapshot) {
-        _photosController.add(snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList());
-      });
+      .asyncMap((photosSnapshot) async {
+        List<Map<String, dynamic>> photosData = [];
+        List<Map<String, dynamic>> storiesData = [];
 
-    return _photosController.stream;
+
+
+        QuerySnapshot storyDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .collection('stories')
+            .get();
+
+        for (var doc in storyDoc.docs) {
+          storiesData.add(doc.data() as Map<String, dynamic>);
+        }
+
+        for (var doc in photosSnapshot.docs) {
+          photosData.add(doc.data());
+        }
+
+        return {
+          'stories': storiesData,
+          'photos': photosData,
+        };
+      });
   }
 
   final descriptionController = TextEditingController();
@@ -70,26 +102,30 @@ class _StoryScreenState extends State<StoryScreen> {
             maxLines: null,
             keyboardType: TextInputType.multiline,
             decoration:  InputDecoration(
-              labelText: photosDataNotifier.value[0]['description'],
+             labelText:  photosData.isNotEmpty ? photosData[0]['description'] : 'No description',
             ),
           ),
           actions: <Widget>[
             TextButton(
               child: const Text('Add'),
               onPressed: () async {
-                if (photosDataNotifier.value.isNotEmpty) {
+                print(photosData);
+                if (photosData.isNotEmpty) {
                   DocumentReference docRef = FirebaseFirestore.instance
                     .collection('users')
-                    .doc(userId) // replace with actual user ID
+                    .doc(users[0]['userId']) // replace with actual user ID
                     .collection('photos')
-                    .doc(photosDataNotifier.value[0]['id']);
-
+                    .doc(photosData[0]['id']);
+                  
                   // Update the document
                   docRef.update({
                     'description': descriptionController.text,
                   });
 
                   Navigator.of(context).pop();
+                } else {
+                  print("nope");
+                  print(photosData);
                 }
               },
             ),
@@ -105,19 +141,19 @@ class _StoryScreenState extends State<StoryScreen> {
  @override
 Widget build(BuildContext context) {
   double screenWidth = MediaQuery.of(context).size.width;
-  _fetchIDFromImagePath(userId);
+  _fetchIDFromImagePath(users[0]['userId']);
 
-  return StreamBuilder<List<Map<String, dynamic>>>(
-    stream: _fetchIDFromImagePath(userId),
-    builder: (BuildContext context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+  return StreamBuilder<Map<String, List<Map<String, dynamic>>>>(
+  stream: _fetchIDFromImagePath(users[0]['userId']),
+  builder: (BuildContext context, AsyncSnapshot<Map<String, List<Map<String, dynamic>>>> snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
         return const CircularProgressIndicator();
       } else if (snapshot.hasError) {
         return Text('Error: ${snapshot.error}');
       } else if (snapshot.hasData && snapshot.data?.isNotEmpty == true) {
-        photosDataNotifier.value = snapshot.data!;
-
-        String description = snapshot.data?[0]['description'] ?? "";
+        storiesData = snapshot.data!['stories']!;
+        photosData = snapshot.data!['photos']!;
+        String description = photosData.isNotEmpty ? photosData[0]['description'] ?? "" : "";
 
         return Scaffold(
           resizeToAvoidBottomInset: false, 
@@ -144,10 +180,13 @@ Widget build(BuildContext context) {
                 ),
               ),
               const Gap(10),
-              description == '' ?
+               description == '' ?
                 OutlinedButton(
                   onPressed: () {
-                    showAlert(context, 'Add description');
+                    // Now call showAlert if photosData is not empty
+                    if (photosData.isNotEmpty) {
+                      showAlert(context, 'Change description');
+                    }
                   },
                   child: const Text('Add description')
                 ) :
@@ -177,7 +216,9 @@ Widget build(BuildContext context) {
                   IconButton(
                     icon: const Icon(Icons.share_outlined),
                     tooltip: "Share Story",
-                    onPressed: () {},
+                    onPressed: () {
+                      print(storiesData);
+                    },
                   ),
                   PopupMenuButton<int>(
                     icon: const Icon(Icons.more_vert_outlined),
@@ -191,7 +232,7 @@ Widget build(BuildContext context) {
                           title: Text('Change description'),
                         ),
                       ),
-                      if (photosDataNotifier.value[0]['isFavorite'] == false)
+                      if (photosData[0]['isFavorite'] == false)
                         const PopupMenuItem<int>(
                           value: 2,
                           child: ListTile(
@@ -217,13 +258,15 @@ Widget build(BuildContext context) {
                     ],
                     onSelected: (int value) {
                         if (value == 1) {
+                          print(photosData);
                           showAlert(context, 'Change description');
+                          print(photosData);
                         } else if (value == 2) {
-                          _fetchIDFromImagePath(userId);
+                          _fetchIDFromImagePath(users[0]['userId']);
                           bool isFavorite  = photosDataNotifier.value[0]['isFavorite'];
                             DocumentReference docRef = FirebaseFirestore.instance
                                 .collection('users')
-                                .doc(userId) // replace with actual user ID
+                                .doc(users[0]['userId']) // replace with actual user ID
                                 .collection('photos')
                                 .doc(photosDataNotifier.value[0]['id']);
 
@@ -233,6 +276,7 @@ Widget build(BuildContext context) {
                             });
                         } else if (value == 3) {
                           // TODO laver en bottomsheet ligesom på google photos brug samme function nede i FABen
+
                         }
                     },
                   ),
