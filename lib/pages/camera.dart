@@ -11,7 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:uuid/uuid.dart';
 
-import '../data/userData.dart';
+import '../data/user_data.dart';
 
 
 
@@ -78,7 +78,7 @@ class _CameraScreenState extends State<CameraScreen>
           //height: screenWidth,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(24),
-            child: Container(
+            child: SizedBox(
               width: screenWidth,
               //height: screenWidth,
               // TODO giv den rounded cornes
@@ -130,9 +130,9 @@ class _CameraScreenState extends State<CameraScreen>
         _capturedImage = XFile(newPhotoPath);
       });
 
-      const String? user = "DQpwb1plg9NovbFDvwMJtKalWcb2";
+      //const String? user = "DQpwb1plg9NovbFDvwMJtKalWcb2";
 
-      String collectionName = '/users/${users[0]['userId']}/stories';
+      String collectionName = '/users/${user['userId']}/stories';
       List<Map<String, dynamic>> documentsData = await getDocumentsData(collectionName);
 
       // Now 'documentsData' is a list of maps, where each map is the data of a document
@@ -158,22 +158,22 @@ class _CameraScreenState extends State<CameraScreen>
         user = userCredential.user;
       } */
 
-      if (users[0]['userId'] != null)
+      if (user['userId'] != null)
       {
         String downloadUrl = '';
 
         // If the user has premium permissions upload to the cloud.
-        if (users[0]['hasPremium'] == true) {
+        if (user['hasPremium'] == true) {
         // User is signed in, proceed with uploading files.
           const uuid = Uuid();
-          final storageRef = FirebaseStorage.instance.ref().child('images').child(user).child('${uuid.v1()}.jpg');
+          final storageRef = FirebaseStorage.instance.ref().child('images').child(user['userId']).child('${uuid.v1()}.jpg');
           final uploadTask = storageRef.putFile(newPhotoFile);
           downloadUrl = await uploadTask.then((res) => res.ref.getDownloadURL());
         }
 
         DocumentReference docRef = await FirebaseFirestore.instance
             .collection('users')
-            .doc(users[0]['userId'])
+            .doc(user['userId'])
             .collection('photos')
             .add({
           'url': downloadUrl,
@@ -186,7 +186,6 @@ class _CameraScreenState extends State<CameraScreen>
         });
 
         await docRef.update({'id': docRef.id});
-        print("image was uploaded");
       } else
         {
           print("image was not uploaded");

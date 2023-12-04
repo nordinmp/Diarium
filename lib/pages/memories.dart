@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:diarium/asset_library.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../data/userData.dart';
+import '../data/user_data.dart';
 
 
 class MemorieScreen extends StatefulWidget
@@ -76,7 +76,7 @@ class _MemorieScreen extends State<MemorieScreen>
           ),
           Expanded(
               child: StreamBuilder<Map<String, List<Map<String, dynamic>>>>(
-                stream: _getPhotosAndStoriesStream(users[0]['userId']),
+                stream: _getPhotosAndStoriesStream(user['userId']),
                 builder: (BuildContext context, AsyncSnapshot<Map<String, List<Map<String, dynamic>>>> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const CircularProgressIndicator();

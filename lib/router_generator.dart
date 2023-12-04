@@ -6,7 +6,7 @@ import 'pages/memories.dart';
 import 'pages/profile.dart';
 import 'pages/camera.dart';
 //import 'pages/settings.dart';
-import 'pages/storyImage.dart';
+import 'pages/story_image.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {

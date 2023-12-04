@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:diarium/asset_library.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../data/userData.dart';
+import '../data/user_data.dart';
 
 
 class MyHomePage extends StatefulWidget {
@@ -45,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               stream: FirebaseFirestore.instance
                   .collection('users')
-                  .doc(users[0]['userId'])
+                  .doc(user['userId'])
                   .collection('stories')
                   .snapshots(),
               builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {

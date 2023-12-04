@@ -1,4 +1,3 @@
-// ignore_for_file: non_constant_identifier_names
 
 import 'dart:async';
 import 'dart:io';
@@ -6,14 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:rxdart/rxdart.dart';
 
 
 import 'package:diarium/asset_library.dart';
 
 
-import '../data/userData.dart';
-
+import '../data/user_data.dart';
 
 
 class StoryScreen extends StatefulWidget
@@ -48,8 +45,8 @@ class _StoryScreenState extends State<StoryScreen> {
 
 
 
-  final StreamController<List<Map<String, dynamic>>> _photosController = StreamController();
-  final StreamController<List<Map<String, dynamic>>> _storiesController = StreamController();
+  //final StreamController<List<Map<String, dynamic>>> _photosController = StreamController();
+  //final StreamController<List<Map<String, dynamic>>> _storiesController = StreamController();
 
   ValueNotifier<List<Map<String, dynamic>>> photosDataNotifier = ValueNotifier<List<Map<String, dynamic>>>([]);
 
@@ -113,7 +110,7 @@ class _StoryScreenState extends State<StoryScreen> {
                 if (photosData.isNotEmpty) {
                   DocumentReference docRef = FirebaseFirestore.instance
                     .collection('users')
-                    .doc(users[0]['userId']) // replace with actual user ID
+                    .doc(user['userId']) // replace with actual user ID
                     .collection('photos')
                     .doc(photosData[0]['id']);
                   
@@ -141,10 +138,19 @@ class _StoryScreenState extends State<StoryScreen> {
  @override
 Widget build(BuildContext context) {
   double screenWidth = MediaQuery.of(context).size.width;
-  _fetchIDFromImagePath(users[0]['userId']);
+  _fetchIDFromImagePath(user['userId']);
+
+  String? findStoryImagePath(String photoId) {
+    for (var story in storiesData) {
+      if (story['id'] == photoId) {
+        return story['imagePath'];
+      }
+    }
+    return null;
+  }
 
   return StreamBuilder<Map<String, List<Map<String, dynamic>>>>(
-  stream: _fetchIDFromImagePath(users[0]['userId']),
+  stream: _fetchIDFromImagePath(user['userId']),
   builder: (BuildContext context, AsyncSnapshot<Map<String, List<Map<String, dynamic>>>> snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
         return const CircularProgressIndicator();
@@ -153,7 +159,13 @@ Widget build(BuildContext context) {
       } else if (snapshot.hasData && snapshot.data?.isNotEmpty == true) {
         storiesData = snapshot.data!['stories']!;
         photosData = snapshot.data!['photos']!;
+
         String description = photosData.isNotEmpty ? photosData[0]['description'] ?? "" : "";
+
+        String? imagePath;
+        if (photosData.isNotEmpty) {
+          imagePath = findStoryImagePath(photosData[0]['story']);
+        }
 
         return Scaffold(
           resizeToAvoidBottomInset: false, 
@@ -198,8 +210,7 @@ Widget build(BuildContext context) {
             ],
           ),
         ),
-          bottomNavigationBar: BottomAppBar(
-        //TODO først hvis når billedet er uploaded til firestore, sådan man ikke kan ændre om den er favorite før - det vil crash
+        bottomNavigationBar: BottomAppBar(
         color: Theme.of(context).colorScheme.surface,
         child:
           Row(
@@ -211,7 +222,27 @@ Widget build(BuildContext context) {
                   IconButton(
                     icon: const Icon(Icons.delete_outline),
                     tooltip: "Delete Story",
-                    onPressed: () {},
+                    onPressed: () {
+                      if (photosData.isNotEmpty) {
+                      DocumentReference docRef = FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(user['userId'])
+                      .collection('photos')
+                      .doc(photosData[0]['id']);
+
+                      docRef.delete();
+
+                      Navigator.of(context).pushReplacementNamed('/');
+
+                      const snackBar = SnackBar(
+                      content: Text('Memory deleted'),
+                      );
+
+                      // Find the ScaffoldMessenger in the widget tree
+                      // and use it to show a SnackBar.
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      }
+                    },
                   ),
                   IconButton(
                     icon: const Icon(Icons.share_outlined),
@@ -232,7 +263,7 @@ Widget build(BuildContext context) {
                           title: Text('Change description'),
                         ),
                       ),
-                      if (photosData[0]['isFavorite'] == false)
+                      if (photosData.isNotEmpty && photosData[0]['isFavorite'] == false)
                         const PopupMenuItem<int>(
                           value: 2,
                           child: ListTile(
@@ -262,13 +293,13 @@ Widget build(BuildContext context) {
                           showAlert(context, 'Change description');
                           print(photosData);
                         } else if (value == 2) {
-                          _fetchIDFromImagePath(users[0]['userId']);
-                          bool isFavorite  = photosDataNotifier.value[0]['isFavorite'];
+                          _fetchIDFromImagePath(user['userId']);
+                          bool isFavorite  = photosData[0]['isFavorite'];
                             DocumentReference docRef = FirebaseFirestore.instance
                                 .collection('users')
-                                .doc(users[0]['userId']) // replace with actual user ID
+                                .doc(user['userId']) 
                                 .collection('photos')
-                                .doc(photosDataNotifier.value[0]['id']);
+                                .doc(photosData[0]['id']);
 
                             // Update the document
                             docRef.update({
@@ -276,20 +307,35 @@ Widget build(BuildContext context) {
                             });
                         } else if (value == 3) {
                           // TODO laver en bottomsheet ligesom på google photos brug samme function nede i FABen
-
+                           StoryBottomSheet(
+                            photosData: photosData, 
+                            storiesData: storiesData, 
+                            user: user,
+                          ).showStoryBottomSheet(context);
                         }
                     },
                   ),
                 ],
               ),
             ),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(16.0), // border radius for a FAB
-              child: FloatingActionButton(
-                onPressed: () {},
-                elevation: 0,
-                tooltip: "",
-                child: Image.asset("assets/StoryImages/${widget.StoryPath}"),
+            GestureDetector(
+              onLongPress: () {
+                StoryBottomSheet(
+                  photosData: photosData, 
+                  storiesData: storiesData, 
+                  user: user,
+                ).showStoryBottomSheet(context);
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16.0), // border radius for a FAB
+                child: FloatingActionButton(
+                  onPressed: () {},
+                  elevation: 0,
+                  tooltip: "",
+                  child: imagePath != null 
+                    ? Image.asset("assets/StoryImages/$imagePath")
+                    : Container(),
+                ),
               ),
             )
             ],

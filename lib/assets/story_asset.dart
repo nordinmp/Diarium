@@ -58,7 +58,7 @@ class _StoryAssetState extends State<StoryAsset> {
                           // Get a reference to the document
                           DocumentReference docRef = FirebaseFirestore.instance
                               .collection('users')
-                              .doc(users[0]['userId']) // replace with actual user ID
+                              .doc(user['userId']) // replace with actual user ID
                               .collection('photos')
                               .doc(widget.imageId);
 
