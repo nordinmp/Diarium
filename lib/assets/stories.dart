@@ -18,7 +18,7 @@ class Stories extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _StoriesState createState() => _StoriesState();
+  State<Stories> createState() => _StoriesState();
 }
 
 class _StoriesState extends State<Stories> {
@@ -28,7 +28,7 @@ class _StoriesState extends State<Stories> {
     double roundedCorners = 24;
     double height = MediaQuery.of(context).size.height * 0.36;
     double width = MediaQuery.of(context).size.width * 0.50;
-    bool isSelected = false;
+    //bool isSelected = false;
 
     return Card(
       elevation: 1,

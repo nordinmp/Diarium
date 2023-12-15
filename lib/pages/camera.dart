@@ -22,7 +22,7 @@ class CameraScreen extends StatefulWidget
   const CameraScreen({super.key, this.isTime = false});
 
   @override
-  _CameraScreenState createState() => _CameraScreenState();
+  State<CameraScreen> createState() => _CameraScreenState();
 }
 
 class _CameraScreenState extends State<CameraScreen>
@@ -90,7 +90,6 @@ class _CameraScreenState extends State<CameraScreen>
             child: SizedBox(
               width: width,
               //height: screenWidth,
-              // TODO giv den rounded cornes
               child: Stack(
                 children: <Widget>[
                   CameraPreview(_controller),
@@ -145,7 +144,7 @@ class _CameraScreenState extends State<CameraScreen>
       List<Map<String, dynamic>> documentsData = await getDocumentsData(collectionName);
 
       // Now 'documentsData' is a list of maps, where each map is the data of a document
-      print('Heres what i have: ${documentsData}');
+      print('Heres what i have: $documentsData');
 
       Wakelock.disable();
 

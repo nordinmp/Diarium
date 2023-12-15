@@ -4,7 +4,7 @@ class NavBar extends StatefulWidget {
   const NavBar({Key? key, required this.indexNumber }) : super(key: key);
   final int indexNumber;
   @override
-  _NavBar createState() => _NavBar();
+  State<NavBar> createState() => _NavBar();
 }
 
 class _NavBar extends State<NavBar> {

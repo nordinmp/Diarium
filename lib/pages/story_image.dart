@@ -27,7 +27,7 @@ class StoryScreen extends StatefulWidget
     });
 
   @override
-  _StoryScreenState createState() => _StoryScreenState();
+  State<StoryScreen> createState() => _StoryScreenState();
 }
 
 class _StoryScreenState extends State<StoryScreen> {

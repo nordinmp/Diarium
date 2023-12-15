@@ -73,8 +73,8 @@ class _MemorieScreen extends State<MemorieScreen>
               "Memories",
               style: TextStyle(
                 color: Theme.of(context).colorScheme.scrim,
-                fontSize: 26,
-                fontWeight: FontWeight.normal,
+                fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
+                fontWeight: Theme.of(context).textTheme.headlineSmall?.fontWeight,
               ),
             ),
           ),

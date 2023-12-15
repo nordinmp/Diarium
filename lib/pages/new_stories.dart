@@ -13,7 +13,7 @@ class NewStory extends StatefulWidget {
   NewStory({Key? key}) : super(key: key);
 
   @override
-  _NewStoryState createState() => _NewStoryState();
+  State<NewStory> createState() => _NewStoryState();
 }
 
 class _NewStoryState extends State<NewStory> {

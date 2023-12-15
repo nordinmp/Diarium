@@ -5,7 +5,7 @@ class CountdownTimerWidget extends StatefulWidget {
   const CountdownTimerWidget({super.key});
 
   @override
-  _CountdownTimerWidgetState createState() => _CountdownTimerWidgetState();
+  State<CountdownTimerWidget> createState() => _CountdownTimerWidgetState();
 }
 
 class _CountdownTimerWidgetState extends State<CountdownTimerWidget> {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:diarium/asset_library.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gap/gap.dart';
 
 import '../data/user_data.dart';
 
@@ -40,8 +41,8 @@ class _MyHomePageState extends State<MyHomePage> {
               "Home",
               style: TextStyle(
                 color: Theme.of(context).colorScheme.scrim,
-                fontSize: 26,
-                fontWeight: FontWeight.normal,
+                fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
+                fontWeight: Theme.of(context).textTheme.headlineSmall?.fontWeight,
               ),
             ),
           ),
@@ -64,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: ListView.separated(
                         itemCount: documents.length,
                         separatorBuilder: (BuildContext context, int index) {
-                          return const SizedBox(height: 16);
+                          return const Gap(16);
                         },
                         itemBuilder: (BuildContext context, int index) {
                           Map<String, dynamic>? storyData = documents[index].data();
