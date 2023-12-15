@@ -15,24 +15,33 @@ class RouteGenerator {
 
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => const MyHomePage());
+        return _createRoute(const MyHomePage());
       case 'memories':
-        return MaterialPageRoute(builder: (_) => const MemorieScreen());
+        return _createRoute(const MemorieScreen());
       case 'profile':
-        return MaterialPageRoute(builder: (_) =>  ProfileScreen());
+        return _createRoute(ProfileScreen());
       case 'camera':
         final isTime = (args as Map<String, dynamic>)['isTime'] ?? false;
-        return MaterialPageRoute(builder: (_) => CameraScreen(isTime: isTime));
+        return _createRoute(CameraScreen(isTime: isTime));
       case 'image':
         final Path = (args as Map<String, dynamic>)['Path'] ?? '';
         final TimeTaken = (args)['TimeTaken'] ?? '';
         final StoryPath = (args)['StoryPath'] ?? '';
-        return MaterialPageRoute(builder: (_) => StoryScreen(Path: Path, TimeTaken: TimeTaken, StoryPath: StoryPath,));
+        return _createRoute(StoryScreen(Path: Path, TimeTaken: TimeTaken, StoryPath: StoryPath));
       case 'newStory':
-        return MaterialPageRoute(builder: (_) =>  NewStory());
+        return _createRoute(NewStory());
       default:
         return _errorRoute();
     }
+  }
+
+  static Route<dynamic> _createRoute(Widget page) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return child;
+      },
+    );
   }
 
   static String generateRouteName(int index) {
