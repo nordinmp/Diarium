@@ -92,7 +92,7 @@ class _NewStoryState extends State<NewStory> {
                           width: width * 0.30,
                           height: width * 0.30,
                           child: Image.asset(
-                            imageAssetPath!,
+                            imageAssetPath,
                             fit: BoxFit.fill,
                           ),
                         ),
