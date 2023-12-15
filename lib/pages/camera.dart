@@ -35,11 +35,22 @@ class _CameraScreenState extends State<CameraScreen>
   late List<CameraDescription> _cameras;
   late CameraDescription _currentCamera;
 
+  late double fullWidth;
+  late double width;
+
   @override
   void initState()
   {
     super.initState();
     _initializeControllerFuture = _initializeCameras();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // You can use MediaQuery here if needed
+    fullWidth = MediaQuery.of(context).size.width;
+    width = fullWidth * 0.9;
   }
 
   Future<void> _initializeCameras() async
@@ -69,17 +80,15 @@ class _CameraScreenState extends State<CameraScreen>
 
   Widget cameraWidget(BuildContext context)
   {
-    final screenWidth = MediaQuery.of(context).size.width;
-
     return Center(
       child:
         SizedBox(
-          width: screenWidth-50,
+          width: width-50,
           //height: screenWidth,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(24),
             child: SizedBox(
-              width: screenWidth,
+              width: width,
               //height: screenWidth,
               // TODO giv den rounded cornes
               child: Stack(
@@ -245,79 +254,81 @@ class _CameraScreenState extends State<CameraScreen>
   @override
   Widget build(BuildContext context)
   {
-    bool isTime = false;
     Wakelock.enable();
     return Scaffold(
       appBar: AppBar(
       ),
       body:
       Center(
-        child: ListView(
-          children: [
-            if (widget.isTime) CountdownTimerWidget(),
-            FutureBuilder<void>(
-              future: _initializeControllerFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return cameraWidget(context);
-                } else {
-                  return const Center(child: CircularProgressIndicator());
-                }
-              },
-            ),
-             Row(
-               mainAxisAlignment: MainAxisAlignment.center ,
-               children: [
-                 //Flash
-                 TextButton(
-                 style: TextButton.styleFrom(
-                   textStyle: const TextStyle(fontSize: 50),
-                   fixedSize: const Size(50, 50), // Adjust the width and height as needed
-                 ),
-                 onPressed: _switchFlash,
-                 child: const Align(
-                   alignment: Alignment.center,
-                   child: Icon(
-                     Icons.flash_on_outlined,
-                     size: 24, // Adjust the size of the icon
-                   ),
-                 ),
-               ),
-                 const Gap(10),
-                 //Camera
-                 TextButton(
-                   style: TextButton.styleFrom(
-                     textStyle: const TextStyle(fontSize: 50),
-                     fixedSize: const Size(80, 80), // Adjust the width and height as needed
-                   ),
-                   onPressed: _takeImage,
-                   child: const Align(
-                     alignment: Alignment.center,
-                     child: Icon(
-                       Icons.radio_button_off_outlined,
-                       size: 60, // Adjust the size of the icon
-                     ),
-                   ),
-                 ),
-                 const Gap(10),
-                 //Switch Camera
-                 TextButton(
-                     style: TextButton.styleFrom(
-                       textStyle: const TextStyle(fontSize: 50),
-                       fixedSize: const Size(50, 50), // Adjust the width and height as needed
-                     ),
-                     onPressed: _switchCamera,
-                     child: const Align(
-                       alignment: Alignment.center,
-                       child: Icon(
-                         Icons.flip_camera_android_outlined,
-                         size: 24, // Adjust the size of the icon
-                       ),
-                     ),
-                   ),
-                 ],
-             ),
-          ],
+        child: SizedBox(
+          width: width,
+          child: ListView(
+            children: [
+              if (widget.isTime) CountdownTimerWidget(),
+              FutureBuilder<void>(
+                future: _initializeControllerFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return cameraWidget(context);
+                  } else {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                },
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center ,
+                children: [
+                  //Flash
+                  TextButton(
+                  style: TextButton.styleFrom(
+                    textStyle: const TextStyle(fontSize: 50),
+                    fixedSize: const Size(50, 50), // Adjust the width and height as needed
+                  ),
+                  onPressed: _switchFlash,
+                  child: const Align(
+                    alignment: Alignment.center,
+                    child: Icon(
+                      Icons.flash_on_outlined,
+                      size: 24, // Adjust the size of the icon
+                    ),
+                  ),
+                ),
+                  const Gap(10),
+                  //Camera
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      textStyle: const TextStyle(fontSize: 50),
+                      fixedSize: const Size(80, 80), // Adjust the width and height as needed
+                    ),
+                    onPressed: _takeImage,
+                    child: const Align(
+                      alignment: Alignment.center,
+                      child: Icon(
+                        Icons.radio_button_off_outlined,
+                        size: 60, // Adjust the size of the icon
+                      ),
+                    ),
+                  ),
+                  const Gap(10),
+                  //Switch Camera
+                  TextButton(
+                      style: TextButton.styleFrom(
+                        textStyle: const TextStyle(fontSize: 50),
+                        fixedSize: const Size(50, 50), // Adjust the width and height as needed
+                      ),
+                      onPressed: _switchCamera,
+                      child: const Align(
+                        alignment: Alignment.center,
+                        child: Icon(
+                          Icons.flip_camera_android_outlined,
+                          size: 24, // Adjust the size of the icon
+                        ),
+                      ),
+                    ),
+                  ],
+              ),
+            ],
+          ),
         ),
       ),
     );

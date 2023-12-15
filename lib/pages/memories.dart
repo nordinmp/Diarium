@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:diarium/asset_library.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gap/gap.dart';
 
 import '../data/user_data.dart';
 
@@ -58,6 +59,9 @@ class _MemorieScreen extends State<MemorieScreen>
   Widget build(BuildContext context) {
     //const userId = 'DQpwb1plg9NovbFDvwMJtKalWcb2';
 
+    double fullWidth = MediaQuery.of(context).size.width;
+    double width = fullWidth * 0.9;
+
     return Scaffold(
       appBar: const HeaderBar(),
       body: Column(
@@ -90,23 +94,28 @@ class _MemorieScreen extends State<MemorieScreen>
                     print('Photos: $photosData');
 
                     // TODO sort by date
-                    return ListView.separated(
-                      itemCount: photosData.length,
-                      separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 16),
-                      itemBuilder: (BuildContext context, int index) {
-                        Map<String, dynamic> StoryImageData = photosData[index];
-                        Map<String, dynamic> StoryStoriesData = storiesData[index];
-                        DateTime dateTaken = (StoryImageData['dateTaken'] as Timestamp).toDate();
-
-                        return StoryAsset(
-                          imagePath: StoryImageData['imagePath'],
-                          isFavorite: StoryImageData['isFavorite'],
-                          imageDate: dateTaken,
-                          storyPath: StoryStoriesData['imagePath'],
-                          storyTitle: StoryStoriesData['title'],
-                          imageId: StoryImageData['id'],
-                        );
-                      },
+                    return Center(
+                      child: SizedBox(
+                        width: width,
+                        child: ListView.separated(
+                          itemCount: photosData.length,
+                          separatorBuilder: (BuildContext context, int index) => const Gap(10),
+                          itemBuilder: (BuildContext context, int index) {
+                            Map<String, dynamic> StoryImageData = photosData[index];
+                            Map<String, dynamic> StoryStoriesData = storiesData[index];
+                            DateTime dateTaken = (StoryImageData['dateTaken'] as Timestamp).toDate();
+                        
+                            return StoryAsset(
+                              imagePath: StoryImageData['imagePath'],
+                              isFavorite: StoryImageData['isFavorite'],
+                              imageDate: dateTaken,
+                              storyPath: StoryStoriesData['imagePath'],
+                              storyTitle: StoryStoriesData['title'],
+                              imageId: StoryImageData['id'],
+                            );
+                          },
+                        ),
+                      ),
                     );
                   } else {
                     return const CircularProgressIndicator();

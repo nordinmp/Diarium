@@ -6,7 +6,9 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'firebase_options.dart';
 
-import 'color_schemes.g.dart';
+import 'theming/color_schemes.g.dart';
+import 'theming/text_scheme.dart';
+
 import 'router_generator.dart';
 
 
@@ -28,6 +30,7 @@ class MyApp extends StatelessWidget {
       title: 'Diarium',
       theme: ThemeData(
         colorScheme: lightColorScheme,
+        textTheme: textSchemes,
         useMaterial3: true,
       ),
       initialRoute: '/',

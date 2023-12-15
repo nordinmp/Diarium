@@ -43,6 +43,12 @@ class _StoryScreenState extends State<StoryScreen> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    descriptionController.dispose();
+    super.dispose();
+  }
+
 
 
   //final StreamController<List<Map<String, dynamic>>> _photosController = StreamController();
@@ -90,7 +96,7 @@ class _StoryScreenState extends State<StoryScreen> {
   Future<void> showAlert(BuildContext context, String title) async{
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // user must tap button to close dialog
+      barrierDismissible: true, // user must tap button to close dialog
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(title),

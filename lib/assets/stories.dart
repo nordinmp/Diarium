@@ -26,7 +26,7 @@ class _StoriesState extends State<Stories> {
   Widget build(BuildContext context) {
 
     double roundedCorners = 24;
-    double height = MediaQuery.of(context).size.height * 0.33;
+    double height = MediaQuery.of(context).size.height * 0.36;
     double width = MediaQuery.of(context).size.width * 0.50;
     bool isSelected = false;
 
@@ -108,13 +108,10 @@ class _StoriesState extends State<Stories> {
                           Wrap(
                             spacing: 4,
                             children: widget.actionClips
-                                .map((actionClip) => ActionChip(
+                                .map((actionClip) => Chip(
                               label: Text(actionClip),
                               backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
                               shape: const StadiumBorder(side: BorderSide.none),
-                              onPressed: () {
-                                print('Chip pressed');
-                              },
                             )).toList(),
                           ),
                         ),

@@ -25,6 +25,10 @@ class _MyHomePageState extends State<MyHomePage> {
       'actionClips': ["New", "Experience"]
     };
     //const userId = 'DQpwb1plg9NovbFDvwMJtKalWcb2';
+
+    double fullWidth = MediaQuery.of(context).size.width;
+    double width = fullWidth * 0.9;
+
     return Scaffold(
       appBar: const HeaderBar(),
       body: Column(
@@ -54,36 +58,41 @@ class _MyHomePageState extends State<MyHomePage> {
                   List<QueryDocumentSnapshot<Map<String, dynamic>>> documents = snapshot.data!.docs;
 
                   // Create a ListView.separated to display the data
-                  return ListView.separated(
-                    itemCount: documents.length,
-                    separatorBuilder: (BuildContext context, int index) {
-                      return const SizedBox(height: 16);
-                    },
-                    itemBuilder: (BuildContext context, int index) {
-                      Map<String, dynamic>? storyData = documents[index].data();
-
-                      // Check if storyData is not null before accessing its properties
-                      if (storyData != null) {
-                        Timestamp startDateTimestamp = storyData['startDate'];
-                        Timestamp endDateTimestamp = storyData['endDate'];
-
-                        DateTime startDate = startDateTimestamp.toDate();
-                        DateTime endDate = endDateTimestamp.toDate();
-
-                        List<dynamic> actionClips = List<dynamic>.from(storyData['actionClips']);
-
-                        return Stories(
-                          imagePath: storyData['imagePath'],
-                          title: storyData['title'],
-                          startDate: startDate,
-                          endDate: endDate,
-                          actionClips: actionClips.map((clip) => clip.toString()).toList(),
-                        );
-                      } else {
-                        // Handle the case when storyData is null
-                        return const SizedBox();
-                      }
-                    },
+                  return Center(
+                    child: SizedBox(
+                      width: width,
+                      child: ListView.separated(
+                        itemCount: documents.length,
+                        separatorBuilder: (BuildContext context, int index) {
+                          return const SizedBox(height: 16);
+                        },
+                        itemBuilder: (BuildContext context, int index) {
+                          Map<String, dynamic>? storyData = documents[index].data();
+                      
+                          // Check if storyData is not null before accessing its properties
+                          if (storyData != null) {
+                            Timestamp startDateTimestamp = storyData['startDate'];
+                            Timestamp endDateTimestamp = storyData['endDate'];
+                      
+                            DateTime startDate = startDateTimestamp.toDate();
+                            DateTime endDate = endDateTimestamp.toDate();
+                      
+                            List<dynamic> actionClips = List<dynamic>.from(storyData['actionClips']);
+                      
+                            return Stories(
+                              imagePath: storyData['imagePath'],
+                              title: storyData['title'],
+                              startDate: startDate,
+                              endDate: endDate,
+                              actionClips: actionClips.map((clip) => clip.toString()).toList(),
+                            );
+                          } else {
+                            // Handle the case when storyData is null
+                            return const SizedBox();
+                          }
+                        },
+                      ),
+                    ),
                   );
                 } else if (snapshot.hasError) {
                   // Handle the error case

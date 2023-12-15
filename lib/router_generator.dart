@@ -7,6 +7,7 @@ import 'pages/profile.dart';
 import 'pages/camera.dart';
 //import 'pages/settings.dart';
 import 'pages/story_image.dart';
+import 'pages/new_stories.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -27,6 +28,8 @@ class RouteGenerator {
         final TimeTaken = (args)['TimeTaken'] ?? '';
         final StoryPath = (args)['StoryPath'] ?? '';
         return MaterialPageRoute(builder: (_) => StoryScreen(Path: Path, TimeTaken: TimeTaken, StoryPath: StoryPath,));
+      case 'newStory':
+        return MaterialPageRoute(builder: (_) =>  NewStory());
       default:
         return _errorRoute();
     }
@@ -44,6 +47,8 @@ class RouteGenerator {
         return 'camera';
       case 4:
         return 'Story';
+      case 5:
+        return 'newStory';
       default:
         return '/';
     }

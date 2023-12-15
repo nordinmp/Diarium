@@ -19,7 +19,7 @@ class HeaderBar extends StatelessWidget implements PreferredSizeWidget{
               IconButton(
                 icon: const Icon(Icons.add),
                 onPressed: () {
-                  // Handle search button press
+                  Navigator.of(context).pushNamed('newStory');
                 },
               ),
               IconButton(
