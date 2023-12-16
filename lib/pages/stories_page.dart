@@ -25,6 +25,7 @@ class _StoriesPage extends State<StoriesPage>
           .collection('users')
           .doc(userId)
           .collection('photos')
+          .orderBy("dateTaken" , descending: true)
           .where('story', isEqualTo: widget.storyId)
           .snapshots()
           .asyncMap((photosSnapshot) async {
@@ -64,6 +65,7 @@ class _StoriesPage extends State<StoriesPage>
     double fullWidth = MediaQuery.of(context).size.width;
     double width = fullWidth * 0.9;
 
+    String titleText = "Stories";
     return Scaffold(
       appBar: const HeaderBar(),
       body: Column(
@@ -72,7 +74,7 @@ class _StoriesPage extends State<StoriesPage>
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 0), // Set the desired padding value
             child: Text(
-              "Memories",
+              titleText,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.scrim,
                 fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
@@ -103,17 +105,17 @@ class _StoriesPage extends State<StoriesPage>
                           itemCount: photosData.length,
                           separatorBuilder: (BuildContext context, int index) => const Gap(10),
                           itemBuilder: (BuildContext context, int index) {
-                            Map<String, dynamic> StoryImageData = photosData[index];
-                            Map<String, dynamic> StoryStoriesData = storiesData[index];
-                            DateTime dateTaken = (StoryImageData['dateTaken'] as Timestamp).toDate();
+                            Map<String, dynamic> storyImageData = photosData[index];
+                            Map<String, dynamic> storyStoriesData = storiesData[index];
+                            DateTime dateTaken = (storyImageData['dateTaken'] as Timestamp).toDate();
                         
                             return StoryAsset(
-                              imagePath: StoryImageData['imagePath'],
-                              isFavorite: StoryImageData['isFavorite'],
+                              imagePath: storyImageData['imagePath'],
+                              isFavorite: storyImageData['isFavorite'],
                               imageDate: dateTaken,
-                              storyPath: StoryStoriesData['imagePath'],
-                              storyTitle: StoryStoriesData['title'],
-                              imageId: StoryImageData['id'],
+                              storyPath: storyStoriesData['imagePath'],
+                              storyTitle: storyStoriesData['title'],
+                              imageId: storyImageData['id'],
                             );
                           },
                         ),

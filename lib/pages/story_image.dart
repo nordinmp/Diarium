@@ -341,7 +341,7 @@ Widget build(BuildContext context) {
               ),
             ),
             GestureDetector(
-              onLongPress: () {
+              onTapCancel: () {
                 StoryBottomSheet(
                   photosData: photosData, 
                   storiesData: storiesData, 
