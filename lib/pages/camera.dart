@@ -270,7 +270,7 @@ class _CameraScreenState extends State<CameraScreen>
                   if (snapshot.connectionState == ConnectionState.done) {
                     return cameraWidget(context);
                   } else {
-                    return const Center(child: CircularProgressIndicator());
+                    return const LoadingAnimation();
                   }
                 },
               ),

@@ -150,12 +150,9 @@ class _StoryAssetState extends State<StoryAsset> {
                       bottomRight: Radius.circular(roundedCorners),
                     ),
                     child:
-                    Container(
-                      child:
-                      Image.file(
-                        File(widget.imagePath),
-                        fit: BoxFit.cover,
-                      ),
+                    Image.file(
+                      File(widget.imagePath),
+                      fit: BoxFit.cover,
                     ),
                   )
               ),

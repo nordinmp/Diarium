@@ -1,6 +1,8 @@
 //import 'package:diarium/asset_library.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:diarium/asset_library.dart';
+
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -16,16 +18,9 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const user = "DQpwb1plg9NovbFDvwMJtKalWcb2";
     return Center(
       child: Container(
-        child: ElevatedButton(
-          onPressed: () async {
-            List<Map<String, dynamic>> documentsData = await getDocumentsData('/users/$user/stories');
-            print(documentsData);
-          },
-          child: const Text("Gello"),
-        ),
+        child: const LoadingAnimation()
       ),
     );
   }

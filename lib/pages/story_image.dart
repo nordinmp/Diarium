@@ -159,7 +159,7 @@ Widget build(BuildContext context) {
   stream: _fetchIDFromImagePath(user['userId']),
   builder: (BuildContext context, AsyncSnapshot<Map<String, List<Map<String, dynamic>>>> snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
-        return const CircularProgressIndicator();
+        return const LoadingAnimation();
       } else if (snapshot.hasError) {
         return Text('Error: ${snapshot.error}');
       } else if (snapshot.hasData && snapshot.data?.isNotEmpty == true) {
@@ -340,7 +340,7 @@ Widget build(BuildContext context) {
                   tooltip: "",
                   child: imagePath != null 
                     ? Image.asset("assets/StoryImages/$imagePath")
-                    : Container(),
+                    : LoadingAnimation(),
                 ),
               ),
             )

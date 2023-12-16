@@ -85,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   return Text('Error: ${snapshot.error}');
                 } else {
                   // If there's no data yet, display a loading indicator
-                  return const CircularProgressIndicator();
+                  return const LoadingAnimation();
                 }
               },
             )

@@ -83,7 +83,7 @@ class _MemorieScreen extends State<MemorieScreen>
                 stream: _getPhotosAndStoriesStream(user['userId']),
                 builder: (BuildContext context, AsyncSnapshot<Map<String, List<Map<String, dynamic>>>> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
+                    return const LoadingAnimation();
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else if (snapshot.hasData) {
@@ -118,7 +118,7 @@ class _MemorieScreen extends State<MemorieScreen>
                       ),
                     );
                   } else {
-                    return const CircularProgressIndicator();
+                    return const LoadingAnimation();
                   }
                 },
               ),
