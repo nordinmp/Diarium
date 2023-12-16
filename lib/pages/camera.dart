@@ -169,14 +169,16 @@ class _CameraScreenState extends State<CameraScreen>
       if (user['userId'] != null)
       {
         String downloadUrl = '';
+        String imagePath = "";
 
         // If the user has premium permissions upload to the cloud.
         if (user['hasPremium'] == true) {
         // User is signed in, proceed with uploading files.
-          const uuid = Uuid();
-          final storageRef = FirebaseStorage.instance.ref().child('images').child(user['userId']).child('${uuid.v1()}.jpg');
-          final uploadTask = storageRef.putFile(newPhotoFile);
-          downloadUrl = await uploadTask.then((res) => res.ref.getDownloadURL());
+            const uuid = Uuid();
+            imagePath = 'images/${user['userId']}/${uuid.v1()}.jpg';
+            final storageRef = FirebaseStorage.instance.ref().child(imagePath);
+            final uploadTask = storageRef.putFile(newPhotoFile);
+            downloadUrl = await uploadTask.then((res) => res.ref.getDownloadURL());
         }
 
         DocumentReference docRef = await FirebaseFirestore.instance
@@ -185,6 +187,7 @@ class _CameraScreenState extends State<CameraScreen>
             .collection('photos')
             .add({
           'url': downloadUrl,
+          'storagePath': imagePath,
           'imagePath': _capturedImage!.path,
           'dateTaken': dateTaken,
           'description': '',
@@ -253,7 +256,7 @@ class _CameraScreenState extends State<CameraScreen>
   @override
   Widget build(BuildContext context)
   {
-    Wakelock.enable();
+    Wakelock.enable(); // keep the screen on
     return Scaffold(
       appBar: AppBar(
       ),

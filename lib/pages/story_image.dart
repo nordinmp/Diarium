@@ -1,6 +1,7 @@
 
 import 'dart:async';
 import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
@@ -140,6 +141,53 @@ class _StoryScreenState extends State<StoryScreen> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  Future<void> deleteStory(BuildContext context) async {
+    if (photosData.isNotEmpty) {
+      DocumentReference docRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user['userId'])
+        .collection('photos')
+        .doc(photosData[0]['id']);
+
+      FirebaseStorage storage = FirebaseStorage.instance;
+      String imagePath = photosData[0]['storagePath'];
+
+      try {
+        await storage.ref(imagePath).delete();
+      } catch (e) {
+        print(imagePath);
+        print('Failed to delete image: $e');
+      }
+
+      docRef.delete();
+
+      if (mounted) {
+        Navigator.of(context).pushReplacementNamed('/');
+
+        const snackBar = SnackBar(
+          content: Text('Memory deleted'),
+        );
+
+        // Use the available 'context' to show the SnackBar
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
+    }
+  }
+
+  Future<void> toggleFavoriteStatus() async {
+    await _fetchIDFromImagePath(user['userId']);
+    bool isFavorite  = photosData[0]['isFavorite'];
+    DocumentReference docRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user['userId']) 
+        .collection('photos')
+        .doc(photosData[0]['id']);
+
+    // Update the document
+    await docRef.update({
+      'isFavorite': !isFavorite,
+    });
+  }
 
  @override
 Widget build(BuildContext context) {
@@ -229,25 +277,7 @@ Widget build(BuildContext context) {
                     icon: const Icon(Icons.delete_outline),
                     tooltip: "Delete Story",
                     onPressed: () {
-                      if (photosData.isNotEmpty) {
-                      DocumentReference docRef = FirebaseFirestore.instance
-                      .collection('users')
-                      .doc(user['userId'])
-                      .collection('photos')
-                      .doc(photosData[0]['id']);
-
-                      docRef.delete();
-
-                      Navigator.of(context).pushReplacementNamed('/');
-
-                      const snackBar = SnackBar(
-                      content: Text('Memory deleted'),
-                      );
-
-                      // Find the ScaffoldMessenger in the widget tree
-                      // and use it to show a SnackBar.
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      }
+                      deleteStory(context);
                     },
                   ),
                   IconButton(
@@ -295,24 +325,10 @@ Widget build(BuildContext context) {
                     ],
                     onSelected: (int value) {
                         if (value == 1) {
-                          print(photosData);
                           showAlert(context, 'Change description');
-                          print(photosData);
                         } else if (value == 2) {
-                          _fetchIDFromImagePath(user['userId']);
-                          bool isFavorite  = photosData[0]['isFavorite'];
-                            DocumentReference docRef = FirebaseFirestore.instance
-                                .collection('users')
-                                .doc(user['userId']) 
-                                .collection('photos')
-                                .doc(photosData[0]['id']);
-
-                            // Update the document
-                            docRef.update({
-                              'isFavorite': !isFavorite,
-                            });
+                          toggleFavoriteStatus();
                         } else if (value == 3) {
-                          // TODO laver en bottomsheet ligesom på google photos brug samme function nede i FABen
                            StoryBottomSheet(
                             photosData: photosData, 
                             storiesData: storiesData, 
@@ -340,7 +356,7 @@ Widget build(BuildContext context) {
                   tooltip: "",
                   child: imagePath != null 
                     ? Image.asset("assets/StoryImages/$imagePath")
-                    : LoadingAnimation(),
+                    : const LoadingAnimation(),
                 ),
               ),
             )
@@ -349,7 +365,7 @@ Widget build(BuildContext context) {
       )
         );
       } else {
-        return const CircularProgressIndicator();
+        return const LoadingAnimation();
       }
     },
   );

@@ -1,3 +1,4 @@
+/*
 import 'package:firebase_auth/firebase_auth.dart';
 
 // Sign in anonymously
@@ -81,3 +82,5 @@ void main() async {
     print('Conversion failed');
   }
 }*/
+
+*/
