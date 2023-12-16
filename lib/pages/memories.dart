@@ -22,6 +22,7 @@ class _MemorieScreen extends State<MemorieScreen>
           .collection('users')
           .doc(userId)
           .collection('photos')
+          .orderBy("dateTaken" , descending: true)
           .where('isFavorite', isEqualTo: true)
           .snapshots()
           .asyncMap((photosSnapshot) async {
@@ -57,8 +58,6 @@ class _MemorieScreen extends State<MemorieScreen>
 
   @override
   Widget build(BuildContext context) {
-    //const userId = 'DQpwb1plg9NovbFDvwMJtKalWcb2';
-
     double fullWidth = MediaQuery.of(context).size.width;
     double width = fullWidth * 0.9;
 

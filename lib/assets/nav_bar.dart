@@ -22,7 +22,7 @@ class _NavBar extends State<NavBar> {
     selectedIndex: _currentIndex,
     destinations: const [
       NavigationDestination(
-        icon: Icon(Icons.home_outlined),
+        icon: Icon(Icons.home),
         selectedIcon: Icon(Icons.home),
         label: 'Home',
       ),

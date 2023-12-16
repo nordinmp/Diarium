@@ -32,9 +32,6 @@ class _StoryAssetState extends State<StoryAsset> {
     double height = MediaQuery.of(context).size.height * 0.10;
     double width = MediaQuery.of(context).size.width * 0.85;
 
-    //const userId = 'DQpwb1plg9NovbFDvwMJtKalWcb2';
-
-
     return GestureDetector(
       onLongPress: () {
         showDialog(context: context, builder: (_) =>
