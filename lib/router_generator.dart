@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'package:diarium/pages/login.dart';
 import 'package:flutter/material.dart';
 import 'pages/home.dart';
 import 'pages/memories.dart';
@@ -9,6 +10,7 @@ import 'pages/camera.dart';
 import 'pages/story_image.dart';
 import 'pages/new_stories.dart';
 import 'pages/stories_page.dart';
+import 'pages/sign_up.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -32,8 +34,12 @@ class RouteGenerator {
       case 'newStory':     
         return _createRoute(NewStory());
       case 'story' :
-      final storyId = (args as Map<String, dynamic>)['storyId'] ?? '';       
+        final storyId = (args as Map<String, dynamic>)['storyId'] ?? '';       
         return _createRoute(StoriesPage(storyId: storyId,));
+      case 'signUp':     
+        return _createRoute(const Signup());
+      case 'login':     
+        return _createRoute(const Login());
       default:
         return _errorRoute();
     }
@@ -64,6 +70,10 @@ class RouteGenerator {
         return 'newStory';
       case 6:
         return 'story';
+      case 7:
+        return 'signUp';
+      case 8:
+        return 'login';
       default:
         return '/';
     }

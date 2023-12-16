@@ -36,6 +36,11 @@ class _NavBar extends State<NavBar> {
         selectedIcon: Icon(Icons.person),
         label: 'Profile',
       ),
+      NavigationDestination(
+        icon: Icon(Icons.person_outline),
+        selectedIcon: Icon(Icons.person),
+        label: 'Signup',
+      ),
     ],
       onDestinationSelected: (index) {
         setState(() {
@@ -51,6 +56,9 @@ class _NavBar extends State<NavBar> {
             break;
           case 2:
             Navigator.pushNamed(context, 'profile');
+            break;
+          case 3:
+            Navigator.pushNamed(context, 'signUp');
             break;
         }    
       }

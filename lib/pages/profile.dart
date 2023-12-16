@@ -1,6 +1,7 @@
 //import 'package:diarium/asset_library.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../api/auth.dart';
 import '../data/user_data.dart';
 
 
@@ -16,6 +17,9 @@ class ProfileScreen extends StatelessWidget {
     return querySnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
   }
 
+
+
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -25,6 +29,7 @@ class ProfileScreen extends StatelessWidget {
             List<Map<String, dynamic>> documentsData = await getDocumentsData('/users/${user['id']}/stories');
             print(documentsData);
             print(user);
+            signOutUser();
           },
           child: const Text("Gello"),
         ),

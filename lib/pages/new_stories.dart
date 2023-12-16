@@ -29,7 +29,7 @@ class _NewStoryState extends State<NewStory> {
 
   List<bool> _isSelected = [];
 
-  final _formKey = GlobalKey<FormState>();
+  final _newStoryFormKey = GlobalKey<FormState>();
 
 
   Future<List<String>> loadAssetManifest() async {
@@ -80,7 +80,7 @@ class _NewStoryState extends State<NewStory> {
         children: [
           Center(
             child: Form(
-              key: _formKey,
+              key: _newStoryFormKey,
               child: SizedBox(
                 width: width,
                 child: Column(
@@ -262,7 +262,7 @@ class _NewStoryState extends State<NewStory> {
                   backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.primaryContainer),
                 ),
                 onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
+                  if (_newStoryFormKey.currentState!.validate()) {
 
                     // Check if at least one tag is selected
                     if (!_isSelected.any((isSelected) => isSelected)) {
