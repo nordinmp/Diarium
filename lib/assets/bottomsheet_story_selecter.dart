@@ -70,7 +70,6 @@ class StoryBottomSheet extends StatelessWidget {
                           });
                 
                           Navigator.pop(context);
-                
                         },
                         child: Row(
                           children: [

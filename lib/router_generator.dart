@@ -8,6 +8,7 @@ import 'pages/camera.dart';
 //import 'pages/settings.dart';
 import 'pages/story_image.dart';
 import 'pages/new_stories.dart';
+import 'pages/stories_page.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -28,8 +29,11 @@ class RouteGenerator {
         final TimeTaken = (args)['TimeTaken'] ?? '';
         final StoryPath = (args)['StoryPath'] ?? '';
         return _createRoute(StoryScreen(Path: Path, TimeTaken: TimeTaken, StoryPath: StoryPath));
-      case 'newStory':
+      case 'newStory':     
         return _createRoute(NewStory());
+      case 'story' :
+      final storyId = (args as Map<String, dynamic>)['storyId'] ?? '';       
+        return _createRoute(StoriesPage(storyId: storyId,));
       default:
         return _errorRoute();
     }
@@ -55,9 +59,11 @@ class RouteGenerator {
       case 3:
         return 'camera';
       case 4:
-        return 'Story';
+        return 'image';
       case 5:
         return 'newStory';
+      case 6:
+        return 'story';
       default:
         return '/';
     }
