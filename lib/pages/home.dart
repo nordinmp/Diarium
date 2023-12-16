@@ -41,7 +41,8 @@ class _MyHomePageState extends State<MyHomePage> {
               stream: FirebaseFirestore.instance
                   .collection('users')
                   .doc(user['userId'])
-                  .collection('stories')
+                  .collection("stories")
+                  .orderBy("title", descending: true) // sort by title
                   .snapshots(),
               builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                 if (snapshot.hasData) {

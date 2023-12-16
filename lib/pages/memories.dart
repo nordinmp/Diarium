@@ -18,42 +18,42 @@ class _MemorieScreen extends State<MemorieScreen>
 
   Stream<Map<String, List<Map<String, dynamic>>>> _getPhotosAndStoriesStream(String userId) {
     // Fetch all 'story' from the 'photos' collection where 'isFavorite' is true
-    return FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .collection('photos')
-        .where('isFavorite', isEqualTo: true)
-        .snapshots()
-        .asyncMap((photosSnapshot) async {
-          List<Map<String, dynamic>> storiesData = [];
-          List<Map<String, dynamic>> photosData = [];
+  return FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('photos')
+          .where('isFavorite', isEqualTo: true)
+          .snapshots()
+          .asyncMap((photosSnapshot) async {
+            List<Map<String, dynamic>> storiesData = [];
+            List<Map<String, dynamic>> photosData = [];
 
-          // Use a loop to fetch the corresponding story for each photo in photosSnapshot
-          for (var doc in photosSnapshot.docs) {
-            String storyId = doc['story'];
+            // Use a loop to fetch the corresponding story for each photo in photosSnapshot
+            for (var doc in photosSnapshot.docs) {
+              String storyId = doc['story'];
 
-            // Fetch the corresponding story from the 'stories' collection
-            DocumentSnapshot storyDoc = await FirebaseFirestore.instance
-                .collection('users')
-                .doc(userId)
-                .collection('stories')
-                .doc(storyId)
-                .get();
+              // Fetch the corresponding story from the 'stories' collection
+              DocumentSnapshot storyDoc = await FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(userId)
+                  .collection('stories')
+                  .doc(storyId)
+                  .get();
 
-            // Add the story data to storiesData
-            storiesData.add(storyDoc.data() as Map<String, dynamic>);
-            photosData.add(doc.data() as Map<String, dynamic>);
-          }
+              // Add the story data to storiesData
+              storiesData.add(storyDoc.data() as Map<String, dynamic>);
+              photosData.add(doc.data() as Map<String, dynamic>);
+            }
 
-          print('Stories Data: $storiesData');
-          print('Photos Data: $photosData');
+            print('Stories Data: $storiesData');
+            print('Photos Data: $photosData');
 
-          return {
-            'stories': storiesData,
-            'photos': photosData,
-          };
-        });
-  }
+            return {
+              'stories': storiesData,
+              'photos': photosData,
+            };
+          });
+    }
 
   @override
   Widget build(BuildContext context) {

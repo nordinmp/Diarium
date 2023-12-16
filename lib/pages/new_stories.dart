@@ -298,7 +298,7 @@ class _NewStoryState extends State<NewStory> {
 
                     docRef.set(newEntry);
 
-                    Navigator.of(context).pushReplacementNamed('/',);
+                    Navigator.pop(context);
                   }
                 },
                 child: const Text("Add"),
