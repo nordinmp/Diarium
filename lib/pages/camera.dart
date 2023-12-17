@@ -138,6 +138,7 @@ class _CameraScreenState extends State<CameraScreen>
         _capturedImage = XFile(newPhotoPath);
       });
 
+
       String collectionName = '/users/${user['userId']}/stories';
       List<Map<String, dynamic>> documentsData = await getDocumentsData(collectionName);
 

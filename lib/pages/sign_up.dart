@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 import '../api/auth.dart';
+import '../data/user_data.dart';
 
 class Signup extends StatefulWidget {
   const Signup({Key? key}) : super(key: key);
@@ -213,7 +214,13 @@ class SignupFormState extends State<SignupForm> {
                       if (userCredential != null) {
                         // User logged in successfully
                         // Navigate to the next screen
+                        user['userId'] = userCredential.user!.uid;
+
+
                         Navigator.of(context).pushReplacementNamed('/',);
+                        setState(() {
+                          
+                        });
                       } else {
                         // Login failed
                         // Show an error message
@@ -269,12 +276,17 @@ class SignupFormState extends State<SignupForm> {
               width: width,
               child: OutlinedButton(
                 onPressed: () async {
-                  UserCredential? userCredential = await signInAnonymously();
+                  UserCredential? userCredential = await createNewAnonymousUser();
                     if (userCredential != null) {
                       // User logged in successfully
                       // Navigate to the next screen
-                      Navigator.of(context).pushReplacementNamed('/',);
-                    } else {
+                       user['userId'] = userCredential.user!.uid;
+
+
+                        Navigator.of(context).pushReplacementNamed('/',);
+                        setState(() {
+                          
+                        });                    } else {
                       // Login failed
                       // Show an error message
                     }

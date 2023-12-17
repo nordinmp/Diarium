@@ -5,6 +5,7 @@ import 'package:diarium/api/firebase_api.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+import 'data/user_data.dart';
 import 'firebase_options.dart';
 
 import 'theming/color_schemes.g.dart';
@@ -34,6 +35,10 @@ class MyApp extends StatelessWidget {
             print('User is logged in');
             print('User ID: ${snapshot.data!.uid}');
             print('User email: ${snapshot.data!.email}');
+            
+            user['userId'] = snapshot.data!.uid;
+            print(user['userId']);
+
             return MaterialApp(
               title: 'Diarium',
               theme: ThemeData(

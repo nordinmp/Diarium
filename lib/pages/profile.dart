@@ -5,11 +5,15 @@ import '../api/auth.dart';
 import '../data/user_data.dart';
 
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({Key? key}) : super(key: key);
 
-  Future<List<Map<String, dynamic>>> getDocumentsData(String collectionName) async
-  {
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  Future<List<Map<String, dynamic>>> getDocumentsData(String collectionName) async {
     final FirebaseFirestore db = FirebaseFirestore.instance;
 
     QuerySnapshot querySnapshot = await db.collection(collectionName).get();
@@ -17,22 +21,21 @@ class ProfileScreen extends StatelessWidget {
     return querySnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
   }
 
-
-
-
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Container(
-        child: ElevatedButton(
-          onPressed: () async {
-            List<Map<String, dynamic>> documentsData = await getDocumentsData('/users/${user['id']}/stories');
-            print(documentsData);
-            print(user);
-            signOutUser();
-          },
-          child: const Text("Gello"),
-        ),
+      child: ElevatedButton(
+        onPressed: () async {
+          //List<Map<String, dynamic>> documentsData = await getDocumentsData('/users/${userCredential.user!.uid}/stories');
+          //print(documentsData);
+          //print(user);
+          signOutUser();
+          Navigator.of(context).pushReplacementNamed('/',);
+          setState(() {
+            
+          });
+        },
+        child: const Text("Gello"),
       ),
     );
   }

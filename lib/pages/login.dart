@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 import '../api/auth.dart';
+import '../data/user_data.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -189,7 +190,14 @@ class LoginFormState extends State<LoginForm> {
                       if (userCredential != null) {
                         // User logged in successfully
                         // Navigate to the next screen
+
+                        user['userId'] = userCredential.user!.uid;
+
+
                         Navigator.of(context).pushReplacementNamed('/',);
+                        setState(() {
+                          
+                        });
                       } else {
                         // Login failed
                         // Show an error message

@@ -175,7 +175,7 @@ class _StoryScreenState extends State<StoryScreen> {
   }
 
   Future<void> toggleFavoriteStatus() async {
-    await _fetchIDFromImagePath(user['userId']);
+    _fetchIDFromImagePath(user['userId']);
     bool isFavorite  = photosData[0]['isFavorite'];
     DocumentReference docRef = FirebaseFirestore.instance
         .collection('users')

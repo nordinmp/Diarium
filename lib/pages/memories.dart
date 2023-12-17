@@ -58,6 +58,7 @@ class _MemorieScreen extends State<MemorieScreen>
 
   @override
   Widget build(BuildContext context) {
+
     double fullWidth = MediaQuery.of(context).size.width;
     double width = fullWidth * 0.9;
 

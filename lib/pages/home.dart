@@ -24,6 +24,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: const HeaderBar(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 0), // Set the desired padding value
@@ -53,33 +54,37 @@ class _MyHomePageState extends State<MyHomePage> {
                   return Center(
                     child: SizedBox(
                       width: width,
-                      child: ListView.separated(
-                        itemCount: documents.length,
-                        separatorBuilder: (BuildContext context, int index) {
-                          return const Gap(16);
-                        },
-                        itemBuilder: (BuildContext context, int index) {
-                          Map<String, dynamic>? storyData = documents[index].data();
-                      
-                          // Check if storyData is not null before accessing its properties
-                          Timestamp startDateTimestamp = storyData['startDate'];
-                          Timestamp endDateTimestamp = storyData['endDate'];
-                    
-                          DateTime startDate = startDateTimestamp.toDate();
-                          DateTime endDate = endDateTimestamp.toDate();
-                    
-                          List<dynamic> actionClips = List<dynamic>.from(storyData['actionClips']);
-                    
-                          return Stories(
-                            imagePath: storyData['imagePath'],
-                            title: storyData['title'],
-                            startDate: startDate,
-                            endDate: endDate,
-                            actionClips: actionClips.map((clip) => clip.toString()).toList(),
-                            id: storyData['id'],
-                          );
-                        },
-                      ),
+                      child: documents.isEmpty ?
+                         Center(
+                          child: Text('Empty'),
+                        )
+                      : ListView.separated(
+                          itemCount: documents.length,
+                          separatorBuilder: (BuildContext context, int index) {
+                            return const Gap(16);
+                          },
+                          itemBuilder: (BuildContext context, int index) {
+                            Map<String, dynamic>? storyData = documents[index].data();
+                        
+                            // Check if storyData is not null before accessing its properties
+                            Timestamp startDateTimestamp = storyData['startDate'];
+                            Timestamp endDateTimestamp = storyData['endDate'];
+                        
+                            DateTime startDate = startDateTimestamp.toDate();
+                            DateTime endDate = endDateTimestamp.toDate();
+                        
+                            List<dynamic> actionClips = List<dynamic>.from(storyData['actionClips']);
+                        
+                            return Stories(
+                              imagePath: storyData['imagePath'],
+                              title: storyData['title'],
+                              startDate: startDate,
+                              endDate: endDate,
+                              actionClips: actionClips.map((clip) => clip.toString()).toList(),
+                              id: storyData['id'],
+                            );
+                          },
+                        )
                     ),
                   );
                 } else if (snapshot.hasError) {
