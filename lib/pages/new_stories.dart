@@ -178,7 +178,7 @@ class _NewStoryState extends State<NewStory> {
                           return null;
                         },
                         onTap: () async {
-                          FocusScope.of(context).requestFocus(new FocusNode()); // to prevent opening default keyboard
+                          FocusScope.of(context).requestFocus(FocusNode()); // to prevent opening default keyboard
                           final DateTime? picked = await showDatePicker(
                             context: context,
                             initialDate: DateTime.now(),
@@ -209,7 +209,7 @@ class _NewStoryState extends State<NewStory> {
                           return null;
                         },
                         onTap: () async {
-                          FocusScope.of(context).requestFocus(new FocusNode()); // to prevent opening default keyboard
+                          FocusScope.of(context).requestFocus(FocusNode()); // to prevent opening default keyboard
                           final DateTime? picked = await showDatePicker(
                             context: context,
                             initialDate: DateTime.now(),
@@ -267,7 +267,7 @@ class _NewStoryState extends State<NewStory> {
                     // Check if at least one tag is selected
                     if (!_isSelected.any((isSelected) => isSelected)) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Please select at least one tag')),
+                        const SnackBar(content: Text('Please select at least one tag')),
                       );
                       return;
                     }

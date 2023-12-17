@@ -22,15 +22,15 @@ class RouteGenerator {
       case 'memories':
         return _createRoute(const MemorieScreen());
       case 'profile':
-        return _createRoute(ProfileScreen());
+        return _createRoute(const ProfileScreen());
       case 'camera':
         final isTime = (args as Map<String, dynamic>)['isTime'] ?? false;
         return _createRoute(CameraScreen(isTime: isTime));
       case 'image':
-        final Path = (args as Map<String, dynamic>)['Path'] ?? '';
-        final TimeTaken = (args)['TimeTaken'] ?? '';
-        final StoryPath = (args)['StoryPath'] ?? '';
-        return _createRoute(StoryScreen(Path: Path, TimeTaken: TimeTaken, StoryPath: StoryPath));
+        final path = (args as Map<String, dynamic>)['Path'] ?? '';
+        final timeTaken = (args)['TimeTaken'] ?? '';
+        final storyPath = (args)['StoryPath'] ?? '';
+        return _createRoute(StoryScreen(path: path, timeTaken: timeTaken, storyPath: storyPath));
       case 'newStory':     
         return _createRoute(NewStory());
       case 'story' :

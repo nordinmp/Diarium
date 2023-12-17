@@ -46,7 +46,7 @@ class _StoriesPage extends State<StoriesPage>
 
               // Add the story data to storiesData
               storiesData.add(storyDoc.data() as Map<String, dynamic>);
-              photosData.add(doc.data() as Map<String, dynamic>);
+              photosData.add(doc.data());
             }
 
             print('Stories Data: $storiesData');
@@ -97,7 +97,7 @@ class _StoriesPage extends State<StoriesPage>
                       child: SizedBox(
                         width: width,
                         child: photosData.isEmpty
-                        ? EmptyState()
+                        ? const EmptyState()
                         : ListView.separated(
                             itemCount: photosData.length,
                             separatorBuilder: (BuildContext context, int index) => const Gap(10),

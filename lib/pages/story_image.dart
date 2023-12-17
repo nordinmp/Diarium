@@ -16,15 +16,15 @@ import '../data/user_data.dart';
 
 class StoryScreen extends StatefulWidget
 {
-  final String Path;
-  final DateTime TimeTaken;
-  final String StoryPath;
+  final String path;
+  final DateTime timeTaken;
+  final String storyPath;
 
   const StoryScreen({
     super.key, 
-    required this.Path, 
-    required this.TimeTaken, 
-    required this.StoryPath
+    required this.path, 
+    required this.timeTaken, 
+    required this.storyPath
     });
 
   @override
@@ -63,7 +63,7 @@ class _StoryScreenState extends State<StoryScreen> {
       .collection('users')
       .doc(userId)
       .collection('photos')
-      .where('imagePath', isEqualTo: widget.Path)
+      .where('imagePath', isEqualTo: widget.path)
       .snapshots()
       .asyncMap((photosSnapshot) async {
         List<Map<String, dynamic>> photosData = [];
@@ -231,7 +231,7 @@ Widget build(BuildContext context) {
             children: [
               const Gap(10),
               Text(
-                DateFormat("yyyy-MM-dd HH:mm").format(widget.TimeTaken),
+                DateFormat("yyyy-MM-dd HH:mm").format(widget.timeTaken),
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.scrim,
                   fontSize: 26,
@@ -241,7 +241,7 @@ Widget build(BuildContext context) {
               SizedBox(
                 width: screenWidth - 150,
                 child: Image.file(
-                  File(widget.Path),
+                  File(widget.path),
                   fit: BoxFit.cover,
                 ),
               ),

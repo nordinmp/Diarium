@@ -101,11 +101,23 @@ class _CameraScreenState extends State<CameraScreen>
     );
   }
 
-  Future<List<Map<String, dynamic>>> getDocumentsData(String collectionName) async
-  {
+  Future<List<Map<String, dynamic>>> getDocumentsData(String collectionName) async {
     final FirebaseFirestore db = FirebaseFirestore.instance;
 
     QuerySnapshot querySnapshot = await db.collection(collectionName).where('default', isEqualTo: true).get();
+
+    // If no documents with 'default' set to true are found, fetch the first document in the collection
+    if (querySnapshot.docs.isEmpty) {
+      querySnapshot = await db.collection(collectionName).limit(1).get();
+      if (querySnapshot.docs.isNotEmpty) {
+        // Get the first document
+        DocumentSnapshot firstDoc = querySnapshot.docs.first;
+        // Update the 'default' field of the first document to true
+        await db.collection(collectionName).doc(firstDoc.id).update({'default': true});
+        // Fetch the updated document
+        querySnapshot = await db.collection(collectionName).where('default', isEqualTo: true).get();
+      }
+    }
 
     return querySnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
   }
@@ -139,9 +151,10 @@ class _CameraScreenState extends State<CameraScreen>
       });
 
 
-      String collectionName = '/users/${user['userId']}/stories';
+      String collectionName = '/users/${user['userId']}/stories/';
+      print(collectionName);
       List<Map<String, dynamic>> documentsData = await getDocumentsData(collectionName);
-
+      print(collectionName);
       // Now 'documentsData' is a list of maps, where each map is the data of a document
       print('Heres what i have: $documentsData');
 
@@ -265,7 +278,7 @@ class _CameraScreenState extends State<CameraScreen>
           width: width,
           child: ListView(
             children: [
-              if (widget.isTime) CountdownTimerWidget(),
+              if (widget.isTime) const CountdownTimerWidget(),
               FutureBuilder<void>(
                 future: _initializeControllerFuture,
                 builder: (context, snapshot) {

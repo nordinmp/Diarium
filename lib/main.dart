@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       future: FirebaseAuth.instance.authStateChanges().first,
       builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator(); // Show loading spinner while waiting
+          return const CircularProgressIndicator(); // Show loading spinner while waiting
         } else {
           if (snapshot.data != null) {
             print('User is logged in');

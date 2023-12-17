@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../api/auth.dart';
-import '../data/user_data.dart';
+//import '../data/user_data.dart';
 
 
 class ProfileScreen extends StatefulWidget {

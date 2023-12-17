@@ -142,7 +142,7 @@ class LoginFormState extends State<LoginForm> {
             TextFormField(
               controller: widget.passwordController,
               decoration: InputDecoration(
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
                 labelText: 'Password',
                 suffixIcon: IconButton(
                   icon: Icon(
