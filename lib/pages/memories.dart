@@ -93,28 +93,29 @@ class _MemorieScreen extends State<MemorieScreen>
                     print('Stories: $storiesData');
                     print('Photos: $photosData');
 
-                    // TODO sort by date
                     return Center(
                       child: SizedBox(
                         width: width,
-                        child: ListView.separated(
-                          itemCount: photosData.length,
-                          separatorBuilder: (BuildContext context, int index) => const Gap(10),
-                          itemBuilder: (BuildContext context, int index) {
-                            Map<String, dynamic> StoryImageData = photosData[index];
-                            Map<String, dynamic> StoryStoriesData = storiesData[index];
-                            DateTime dateTaken = (StoryImageData['dateTaken'] as Timestamp).toDate();
-                        
-                            return StoryAsset(
-                              imagePath: StoryImageData['imagePath'],
-                              isFavorite: StoryImageData['isFavorite'],
-                              imageDate: dateTaken,
-                              storyPath: StoryStoriesData['imagePath'],
-                              storyTitle: StoryStoriesData['title'],
-                              imageId: StoryImageData['id'],
-                            );
-                          },
-                        ),
+                        child:photosData.isEmpty
+                        ? EmptyState()
+                        : ListView.separated(
+                            itemCount: photosData.length,
+                            separatorBuilder: (BuildContext context, int index) => const Gap(10),
+                            itemBuilder: (BuildContext context, int index) {
+                              Map<String, dynamic> storyImageData = photosData[index];
+                              Map<String, dynamic> storyStoriesData = storiesData[index];
+                              DateTime dateTaken = (storyImageData['dateTaken'] as Timestamp).toDate();
+                          
+                              return StoryAsset(
+                                imagePath: storyImageData['imagePath'],
+                                isFavorite: storyImageData['isFavorite'],
+                                imageDate: dateTaken,
+                                storyPath: storyStoriesData['imagePath'],
+                                storyTitle: storyStoriesData['title'],
+                                imageId: storyImageData['id'],
+                              );
+                            },
+                          ),
                       ),
                     );
                   } else {

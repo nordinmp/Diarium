@@ -67,21 +67,17 @@ class _StoriesPage extends State<StoriesPage>
 
     String titleText = "Stories";
     return Scaffold(
-      appBar: const HeaderBar(),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0), // Set the desired padding value
-            child: Text(
+      appBar: AppBar(
+        title: Text(
               titleText,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.scrim,
-                fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
-                fontWeight: Theme.of(context).textTheme.headlineSmall?.fontWeight,
               ),
             ),
-          ),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
           Expanded(
               child: StreamBuilder<Map<String, List<Map<String, dynamic>>>>(
                 stream: _getPhotosAndStoriesStream(user['userId']),
@@ -97,28 +93,29 @@ class _StoriesPage extends State<StoriesPage>
                     print('Stories: $storiesData');
                     print('Photos: $photosData');
 
-                    // TODO sort by date
                     return Center(
                       child: SizedBox(
                         width: width,
-                        child: ListView.separated(
-                          itemCount: photosData.length,
-                          separatorBuilder: (BuildContext context, int index) => const Gap(10),
-                          itemBuilder: (BuildContext context, int index) {
-                            Map<String, dynamic> storyImageData = photosData[index];
-                            Map<String, dynamic> storyStoriesData = storiesData[index];
-                            DateTime dateTaken = (storyImageData['dateTaken'] as Timestamp).toDate();
-                        
-                            return StoryAsset(
-                              imagePath: storyImageData['imagePath'],
-                              isFavorite: storyImageData['isFavorite'],
-                              imageDate: dateTaken,
-                              storyPath: storyStoriesData['imagePath'],
-                              storyTitle: storyStoriesData['title'],
-                              imageId: storyImageData['id'],
-                            );
-                          },
-                        ),
+                        child: photosData.isEmpty
+                        ? EmptyState()
+                        : ListView.separated(
+                            itemCount: photosData.length,
+                            separatorBuilder: (BuildContext context, int index) => const Gap(10),
+                            itemBuilder: (BuildContext context, int index) {
+                              Map<String, dynamic> storyImageData = photosData[index];
+                              Map<String, dynamic> storyStoriesData = storiesData[index];
+                              DateTime dateTaken = (storyImageData['dateTaken'] as Timestamp).toDate();
+                          
+                              return StoryAsset(
+                                imagePath: storyImageData['imagePath'],
+                                isFavorite: storyImageData['isFavorite'],
+                                imageDate: dateTaken,
+                                storyPath: storyStoriesData['imagePath'],
+                                storyTitle: storyStoriesData['title'],
+                                imageId: storyImageData['id'],
+                              );
+                            },
+                          ),
                       ),
                     );
                   } else {

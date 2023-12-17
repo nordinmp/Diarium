@@ -54,10 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   return Center(
                     child: SizedBox(
                       width: width,
-                      child: documents.isEmpty ?
-                         Center(
-                          child: Text('Empty'),
-                        )
+                      child: documents.isEmpty ? EmptyState()
                       : ListView.separated(
                           itemCount: documents.length,
                           separatorBuilder: (BuildContext context, int index) {

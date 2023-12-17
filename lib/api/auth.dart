@@ -1,21 +1,32 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+  Map<String, dynamic> newUser = {
+    'userId': '',
+    'name': 'Guest',
+    'hasPremium': false,
+    'dateCreated':  DateTime.now(),
+    'activeStories': 0,
+    'streak': 0,
+    'finishedStories': 0,
+    'daysCaptured': 0,
+  };
+
+  Map<String, dynamic> defaultStory = {
+    "default": true,
+    "imagePath": "day7-vintage-camera.png",
+    "actionClips": ["Everyday"],
+    "title": "Default",
+    "startDate": DateTime.now(),
+    "endDate": DateTime.now().add(const Duration(days: 365 * 30)) // Add 30 years to the current date
+  };
+
 // Sign in anonymously
 Future<UserCredential?> createNewAnonymousUser() async {
   try {
     UserCredential userCredential = await FirebaseAuth.instance.signInAnonymously();
 
-    Map<String, dynamic> newUser = {
-      'userId': userCredential.user!.uid,
-      'name': 'Guest',
-      'hasPremium': false,
-      'dateCreated':  DateTime.now(),
-      'activeStories': 0,
-      'streak': 0,
-      'finishedStories': 0,
-      'daysCaptured': 0,
-    };
+    newUser['userId'] = userCredential.user!.uid;
 
     CollectionReference users = FirebaseFirestore.instance.collection('users');
     users
@@ -24,14 +35,7 @@ Future<UserCredential?> createNewAnonymousUser() async {
         .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));
 
-    Map<String, dynamic> defaultStory = {
-      "default": true,
-      "imagePath": "day7-vintage-camera",
-      "actionClips": ["Everyday"],
-      "title": "Default",
-      "startDate": DateTime.now(),
-      "endDate": DateTime.now().add(const Duration(days: 365 * 30)) // Add 30 years to the current date
-    };
+
 
     CollectionReference stories = FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).collection('stories');
     DocumentReference docRef = await stories.add(defaultStory);
@@ -88,16 +92,8 @@ Future<UserCredential?> createNewUser(String email, String password, String user
       password: password,
     );
 
-    Map<String, dynamic> newUser = {
-      'userId': userCredential.user!.uid,
-      'name': username,
-      'hasPremium': false,
-      'dateCreated':  DateTime.now(),
-      'activeStories': 0,
-      'streak': 0,
-      'finishedStories': 0,
-      'daysCaptured': 0,
-    };
+    newUser['userId'] = userCredential.user!.uid;
+
 
     CollectionReference users = FirebaseFirestore.instance.collection('users');
     users
@@ -105,15 +101,6 @@ Future<UserCredential?> createNewUser(String email, String password, String user
         .set(newUser)
         .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));
-
-    Map<String, dynamic> defaultStory = {
-      "default": true,
-      "imagePath": "day7-vintage-camera.png",
-      "actionClips": ["Everyday"],
-      "title": "Default",
-      "startDate": DateTime.now(),
-      "endDate": DateTime.now().add(const Duration(days: 365 * 30)) // Add 30 years to the current date
-    };
 
     CollectionReference stories = FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).collection('stories');
     DocumentReference docRef = await stories.add(defaultStory);
