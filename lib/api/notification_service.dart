@@ -5,35 +5,66 @@ import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 
+import 'dart:math';
 
-tz.TZDateTime time = tz.TZDateTime.now(tz.local);
-String formattedTime = DateFormat('yyyy-MM-dd – kk:mm:ss:SSS').format(time);
+
+Random random = Random();
+int randomHour = random.nextInt(23);
+int randomMinute = random.nextInt(60);
+Duration randomDuration = Duration(hours: randomHour, minutes: randomMinute);
 
 
 class NotificationService {
-  void selectNotification(NotificationResponse response) {
-  // Update the time when the notification was sent
-  DateTime notificationSentTime = DateTime.now();
+  tz.TZDateTime startOfDay = tz.TZDateTime.now(tz.local).subtract(Duration(hours: tz.TZDateTime.now(tz.local).hour, minutes: tz.TZDateTime.now(tz.local).minute));
 
-  // Calculate the time left in TZDateTime format
-  tz.TZDateTime timeLeftInTz = time.add(const Duration(minutes:3));
+  tz.TZDateTime get randomTime => startOfDay.add(randomDuration);
 
-  // Calculate the difference between the current time and the notification sent time
-  Duration difference = timeLeftInTz.difference(notificationSentTime);
-  int seconds = difference.inSeconds; 
+  String get formattedTime => DateFormat('yyyy-MMMM-dd – kk:mm:ss:SSS').format(randomTime);
 
-  // Handle notification tap
-  navigatorKey.currentState?.pushNamed(
-    'camera',
-    arguments: {
-      'isTime': true,
-      'timeLeft': seconds,
-    },
-  );
-  }
+  tz.TZDateTime? updatedRandomTime;
 
   // Singleton pattern
   static final NotificationService _notificationService = NotificationService._internal();
+  static NotificationService get instance => _notificationService;
+
+  void checkAndUpdateTime() {
+    // Check if randomTime is in the past
+    if (randomTime.isBefore(DateTime.now())) {
+      // If it is, add one day to it
+      updatedRandomTime = randomTime.add(Duration(days: 1));
+    }
+  }
+
+  DateTime? lastNotificationDate;
+  void selectNotification(NotificationResponse response) {
+
+    if (response.payload == 'scheduled') {
+      // Update the time when the notification was sent
+      DateTime notificationSentTime = DateTime.now();
+
+      // Calculate the time left in TZDateTime format
+      tz.TZDateTime timeLeftInTz = randomTime.add(const Duration(minutes:3));
+
+      // Calculate the difference between the current time and the notification sent time
+      Duration difference = timeLeftInTz.difference(notificationSentTime);
+      int seconds = difference.inSeconds;
+
+      // Handle notification tap
+      navigatorKey.currentState?.pushNamed(
+        'camera',
+        arguments: {
+          'isTime': true,
+          'scheduledTime': seconds,
+        },
+      );
+
+      scheduleNotifications(); //Schedule new notification
+    } else {
+      print('Something else');
+    }
+  }
+
+  // Singleton pattern
   factory NotificationService() {
     return _notificationService;
   }
@@ -65,6 +96,8 @@ class NotificationService {
       initializationSettings,
       onDidReceiveNotificationResponse: selectNotification,
     );
+
+    checkAndUpdateTime(); // check om tiden er gået
   }
 
   static const AndroidNotificationDetails androidPlatformChannelSpecifics =
@@ -81,10 +114,14 @@ class NotificationService {
   late NotificationDetails instancePlatformChannelSpecifics;
 
   NotificationService._internal() {
+    updatedRandomTime = randomTime;
     instancePlatformChannelSpecifics = const NotificationDetails(
       android: androidPlatformChannelSpecifics,
       iOS: iOSPlatformChannelSpecifics
     );
+  }
+  bool isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
   }
 
   int getNotificationId() {
@@ -93,28 +130,34 @@ class NotificationService {
   }
 
   Future<void> scheduleNotifications() async {
-    try {
-      print('Scheduling notification...');
-      tz.TZDateTime time = tz.TZDateTime.now(tz.local).add(const Duration(seconds:20));
-      String formattedTime = DateFormat('yyyy-MM-dd – kk:mm:ss:SSS').format(time);
+  try {
+    print('Scheduling notification...');
+    DateTime now = DateTime.now();
+    if (lastNotificationDate == null || !isSameDay(lastNotificationDate!, now)) {
+
 
       await flutterLocalNotificationsPlugin.zonedSchedule(
         getNotificationId(),
-        formattedTime,
-        "This is the Notification Body!",
-        time,
-        instancePlatformChannelSpecifics,
+        '❗️Story time❗️',
+        "It's time to take a Story",
+        updatedRandomTime!,
+        instancePlatformChannelSpecifics,  
+        payload: 'scheduled',
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
       );
       print('Notification scheduled successfully.');
-
-      var pendingNotifications = await flutterLocalNotificationsPlugin.pendingNotificationRequests();
-      print('Number of pending notifications: ${pendingNotifications.length}');
-    } catch (e, stacktrace) {
-      print('Error scheduling notification: $e\n$stacktrace');
+      lastNotificationDate = now;
+    } else {
+      print('Notification already sent today.');
     }
+
+    var pendingNotifications = await flutterLocalNotificationsPlugin.pendingNotificationRequests();
+    print('Number of pending notifications: ${pendingNotifications.length}');
+  } catch (e, stacktrace) {
+    print('Error scheduling notification: $e\n$stacktrace');
+  }
   }
 
   Future<void> sendNotificationNow() async {
@@ -146,5 +189,6 @@ class NotificationService {
 
   Future<void> cancelAllNotifications() async {
     await flutterLocalNotificationsPlugin.cancelAll();
+    lastNotificationDate = null;
   }
 }
