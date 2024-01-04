@@ -150,6 +150,7 @@ class _StoryScreenState extends State<StoryScreen> {
         .doc(photosData[0]['id']);
 
       FirebaseStorage storage = FirebaseStorage.instance;
+      //TODO den skal kun tjekke hvis der er noget fordi ellers kan man ikke slette
       String imagePath = photosData[0]['storagePath'];
 
       try {

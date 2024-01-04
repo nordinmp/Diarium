@@ -18,8 +18,9 @@ import '../data/user_data.dart';
 class CameraScreen extends StatefulWidget
 {
   final bool isTime;
+  final int timeLeft;
 
-  const CameraScreen({super.key, this.isTime = false});
+  const CameraScreen({super.key, this.isTime = false, this.timeLeft = 180});
 
   @override
   State<CameraScreen> createState() => _CameraScreenState();
@@ -61,7 +62,6 @@ class _CameraScreenState extends State<CameraScreen>
     _controller = CameraController(
       _currentCamera,
       ResolutionPreset.medium,
-
     );
     await _controller.initialize(); // initialize the controller
 
@@ -278,7 +278,7 @@ class _CameraScreenState extends State<CameraScreen>
           width: width,
           child: ListView(
             children: [
-              if (widget.isTime) const CountdownTimerWidget(),
+              if (widget.isTime) CountdownTimerWidget(timeLeft: widget.timeLeft,),
               FutureBuilder<void>(
                 future: _initializeControllerFuture,
                 builder: (context, snapshot) {

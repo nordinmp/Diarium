@@ -1,9 +1,17 @@
+import 'package:diarium/api/notification_service.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:diarium/api/firebase_api.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'data/user_data.dart';
 import 'firebase_options.dart';
@@ -13,7 +21,12 @@ import 'theming/text_scheme.dart';
 
 import 'router_generator.dart';
 
+
+
 FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+
+final countdownTimeProvider = StateProvider<DateTime>((ref) => DateTime.now());
+
 
 class MyApp extends StatelessWidget {
   final GlobalKey<NavigatorState> navigatorKey;
@@ -75,13 +88,33 @@ class MyApp extends StatelessWidget {
   }
 }
 
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  tz.initializeTimeZones();
+  final String timeZone = await FlutterNativeTimezone.getLocalTimezone();
+  tz.setLocalLocation(tz.getLocation(timeZone));
+  NotificationService notificationService = NotificationService();
+  await notificationService.init();
 
-  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-  runApp(MyApp(navigatorKey: navigatorKey));
+ // Request notification permissions
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+  print('User granted permission: ${settings.authorizationStatus}');
+
+runApp(
+   ProviderScope(
+     child: MyApp(navigatorKey: navigatorKey),
+   ),
+ );
 }

@@ -2,19 +2,22 @@ part of asset_library;
 
 
 class CountdownTimerWidget extends StatefulWidget {
-  const CountdownTimerWidget({super.key});
+  final int timeLeft;
+
+  const CountdownTimerWidget({super.key, required this.timeLeft});
 
   @override
   State<CountdownTimerWidget> createState() => _CountdownTimerWidgetState();
 }
 
 class _CountdownTimerWidgetState extends State<CountdownTimerWidget> {
-  int _remainingSeconds = 180; // 3 minutes in seconds
+  late int _remainingSeconds; // 3 minutes in seconds
   late Timer _timer;
 
   @override
   void initState() {
     super.initState();
+     _remainingSeconds = widget.timeLeft; // 3 minutes in seconds
     _startTimer();
   }
 

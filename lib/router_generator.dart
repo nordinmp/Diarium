@@ -25,7 +25,8 @@ class RouteGenerator {
         return _createRoute(const ProfileScreen());
       case 'camera':
         final isTime = (args as Map<String, dynamic>)['isTime'] ?? false;
-        return _createRoute(CameraScreen(isTime: isTime));
+        final timeLeft = (args)['timeLeft'] ?? 0;
+        return _createRoute(CameraScreen(isTime: isTime, timeLeft: timeLeft));
       case 'image':
         final path = (args as Map<String, dynamic>)['Path'] ?? '';
         final timeTaken = (args)['TimeTaken'] ?? '';

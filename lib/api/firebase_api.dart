@@ -2,8 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
+import 'package:flutter_local_notifications/flutter_local_notifications.dart'; // Add this line
 
 
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
@@ -50,7 +49,6 @@ class FirebaseApi {
     const android = AndroidInitializationSettings("assets/icons/ic_launcher.png");
     final settings = InitializationSettings(android: android, iOS: iOS);
   }
-
 
   void initPushNotifications(BuildContext context) {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
