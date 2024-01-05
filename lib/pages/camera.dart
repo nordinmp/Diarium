@@ -182,6 +182,7 @@ class _CameraScreenState extends State<CameraScreen>
       {
         String downloadUrl = '';
         String imagePath = "";
+        bool onTime = false;
 
         // If the user has premium permissions upload to the cloud.
         if (user['hasPremium'] == true) {
@@ -191,6 +192,10 @@ class _CameraScreenState extends State<CameraScreen>
             final storageRef = FirebaseStorage.instance.ref().child(imagePath);
             final uploadTask = storageRef.putFile(newPhotoFile);
             downloadUrl = await uploadTask.then((res) => res.ref.getDownloadURL());
+        }
+
+        if (widget.isTime && widget.timeLeft > 0) {
+          onTime = true;
         }
 
         DocumentReference docRef = await FirebaseFirestore.instance
@@ -206,6 +211,7 @@ class _CameraScreenState extends State<CameraScreen>
           'story': documentsData[0]['id'],
           'isFavorite': false,
           'isShared': false,
+          'onTime': onTime
         });
 
         await docRef.update({'id': docRef.id});

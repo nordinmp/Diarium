@@ -36,6 +36,7 @@ class NotificationService {
   }
 
   DateTime? lastNotificationDate;
+
   void selectNotification(NotificationResponse response) {
 
     if (response.payload == 'scheduled') {
@@ -125,8 +126,10 @@ class NotificationService {
   }
 
   int getNotificationId() {
-    final now = DateTime.now();
-    return now.day + now.month * 100 + now.year * 10000;
+    var formatter = DateFormat('MMddHHmm');
+    String formatted = formatter.format(randomTime);
+    print(formatted); 
+    return int.parse(formatted);
   }
 
   Future<void> scheduleNotifications() async {
@@ -166,6 +169,7 @@ class NotificationService {
       getNotificationId(),
       "Im instant ",
       "YAY its not working!",
+      payload: 'scheduled',
       instancePlatformChannelSpecifics,
     );
     print('Notification sent.');
