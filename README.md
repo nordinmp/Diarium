@@ -6,7 +6,7 @@
 
 ## Description
 
-Inspired by BeReal, minutiae, and OneShot, Memoriarium is a unique mobile app designed to capture and preserve your precious memories. Create and save 'memories' in the form of stories, with the flexibility to capture as many as you want. What sets Memoriarium apart is its daily notification feature, ensuring you revisit and reflect on your memories regularly. The notification time is personalized for each user, adding an element of individualization to the daily experience. Embrace the power of memories with MemoryVerse – your daily journey into the moments that matter.
+Inspired by BeReal, minutiae, and OneShot, Memoriarium is a unique mobile app designed to capture and preserve your precious memories. Create and save 'memories' in the form of stories, with the flexibility to capture as many as you want. What sets Memoriarium apart is its daily notification feature, ensuring you revisit and reflect on your memories regularly. The notification time is personalized for each user, adding an element of individualization to the daily experience. Embrace the power of memories with Memoriarium – your daily journey into the moments that matter.
 
 ## Screenshots
 
