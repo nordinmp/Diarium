@@ -78,27 +78,117 @@ class _CameraScreenState extends State<CameraScreen>
     super.dispose();
   }
 
-  Widget cameraWidget(BuildContext context)
-  {
-    return Center(
-      child:
-        SizedBox(
-          width: width-50,
-          //height: screenWidth,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(24),
-            child: SizedBox(
-              width: width,
-              //height: screenWidth,
-              child: Stack(
-                children: <Widget>[
-                  CameraPreview(_controller),
-                ],
+  double _scale = 1.0;
+  double _baseScale = 1.0;
+
+Widget cameraWidget(BuildContext context) {
+    double iconSize = 15.0; // Define your icon size here
+    double buttonSize = 30.0; // Define your button size here
+  return GestureDetector(
+    onScaleStart: (details) {
+      _baseScale = _scale;
+    },
+    onScaleUpdate: (details) {
+      setState(() {
+        _scale = _baseScale * details.scale;
+        _controller.setZoomLevel(_scale);
+      });
+    },
+    child: Stack(
+      alignment: Alignment.center,
+      children: <Widget>[
+        Center(
+          child: SizedBox(
+            width: width - 50,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: SizedBox(
+                width: width,
+                child: CameraPreview(_controller),
               ),
             ),
           ),
         ),
-    );
+        _currentCamera.lensDirection == CameraLensDirection.back ? Positioned(
+          bottom: 20,
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primaryContainer, // Add this if you want the container to have a color
+              borderRadius: BorderRadius.circular(50), // Adjust the border radius as needed
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                    color: _scale == 1.0 ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onPrimaryContainer,
+                    borderRadius: BorderRadius.circular(50), // Adjust the border radius as needed
+                  ),
+                  child: SizedBox(
+                    width: buttonSize,
+                    height: buttonSize,
+                    child: IconButton(
+                      icon: Icon(Icons.zoom_in, color: Theme.of(context).colorScheme.surface, size: iconSize),
+                      onPressed: () => _setZoomLevel(1.0),
+                    ),
+                  ),
+                ),
+                const Gap(5),
+                Container(
+                  decoration: BoxDecoration(
+                    color: _scale == 2.0 ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onPrimaryContainer,
+                    borderRadius: BorderRadius.circular(50), // Adjust the border radius as needed
+                  ),
+                  child: SizedBox(
+                    width: buttonSize,
+                    height: buttonSize,
+                    child: IconButton(
+                      icon: Icon(Icons.zoom_in, color: Theme.of(context).colorScheme.surface, size: iconSize),
+                      onPressed: () => _setZoomLevel(2.0),
+                    ),
+                  ),
+                ),
+                const Gap(5),
+                Container(
+                  decoration: BoxDecoration(
+                    color: _scale == 5.0 ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onPrimaryContainer,
+                    borderRadius: BorderRadius.circular(50), // Adjust the border radius as needed
+                  ),
+                  child: SizedBox(
+                    width: buttonSize,
+                    height: buttonSize,
+                    child: IconButton(
+                      icon: Icon(Icons.zoom_in, color: Theme.of(context).colorScheme.surface, size: iconSize),
+                      onPressed: () => _setZoomLevel(5.0),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ) : Container(), 
+      ],
+    ),
+  );
+}
+
+  void _setZoomLevel(double level) {
+    setState(() {
+      double minZoomLevel = 1;
+      double maxZoomLevel = 5.0;
+
+      // Ensure level does not exceed min or max zoom levels
+      if (level < minZoomLevel) {
+        _scale = minZoomLevel;
+      } else if (level > maxZoomLevel) {
+        _scale = maxZoomLevel;
+      } else {
+        _scale = level;
+      }
+
+      _controller.setZoomLevel(_scale);
+    });
   }
 
   Future<List<Map<String, dynamic>>> getDocumentsData(String collectionName) async {
