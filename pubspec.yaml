@@ -42,7 +42,7 @@ dependencies:
   firebase_core: ^2.15.1
   firebase_core_platform_interface: ^5.0.0
   # analytics
-  firebase_analytics: ^10.4.5
+  firebase_analytics: ^10.8.0
   # database
   cloud_firestore: ^4.8.5
   firebase_database: ^10.2.5

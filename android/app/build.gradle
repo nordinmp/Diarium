@@ -23,14 +23,14 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
-
 android {
     namespace "com.nmp.diarium"
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 33
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -66,6 +66,19 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+
+    flavorDimensions "version"
+
+    productFlavors {
+       debugFlavor {
+           dimension "version"
+           applicationIdSuffix ".debug"
+       }
+       prodFlavor {
+           dimension "version"
+       }
+   }
 }
 
 flutter {
@@ -75,3 +88,4 @@ flutter {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
+
